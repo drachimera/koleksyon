@@ -4,13 +4,16 @@
 
 import unittest
 
-from sample.simple import add_one
+import koleksyon.lib as ll
 
 
-class TestSimple(unittest.TestCase):
+class TestLib(unittest.TestCase):
 
-    def test_add_one(self):
-        self.assertEqual(add_one(5), 6)
+    def test_find_max_mode(self):
+        a = [1,1,2,2,3]
+        mm = ll.find_max_mode(a)
+        self.assertEqual(mm, 2)
+
 
 
 if __name__ == '__main__':
