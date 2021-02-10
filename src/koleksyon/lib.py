@@ -18,35 +18,60 @@ import pandas as pd
 #plot
 import seaborn as sns
 import matplotlib.pyplot as plt
-from IPython.display import Image, display
+from IPython.display import Image, SVG, display
 from IPython.display import set_matplotlib_formats
 
 #  listOfImageNames = ['/path/to/images/1.png',
 #                      '/path/to/images/2.png']
 #
-def notebook_display_image(listOfImageNames):
+def notebook_display_image_svg(listOfImageNames):
     """
     Takes as input a list of images (e.g. png) and displays them in the current cell
     """
     for imageName in listOfImageNames:
-        display(Image(filename=imageName))
+        display(SVG(filename=imageName))
+
+
+def findMiddle(input_list):
+    """
+    Finds the middle element in a list.  if list is even, returns two middle elements
+    """
+    middle = float(len(input_list))/2
+    l = []
+    if middle % 2 != 0:
+        l.append(input_list[int(middle - .5)])
+        return l
+    else:
+        l.append(input_list[int(middle)])
+        l.append(input_list[int(middle-1)])
+        return l
 
 
 #usage:
 # a = [1,1,2,2,3]
 # print(find_max_mode(a)) # print 2
-def find_max_mode(list1):
-    list_table = statistics._counts(list1)
+def find_mode_mode(list1):
+    """
+    If you use statistics.mode on a list with multiple modes, it throws a math exception... which is a pain to 
+    resolve when all you are trying to do is get some summary statistics on a variable.
+    This will force the function to return a single mode if there are ties, and that single mode will be as
+    close to the middle of the list as possible.  If the number is odd, it will be the middle, if even, we will pick the max of the two in the middle
+    """
+    list_table = statistics._counts(list1) #occurance/count pairs that tie for mode e.g. [(1, 2), (2, 2)]
     len_table = len(list_table)
 
-    if len_table == 1:
-        max_mode = statistics.mode(list1)
+    if len_table == 1:  #one value is the most common in the list, use that!
+        mode_mode = statistics.mode(list1) #just one possibility, use it!
+        return mode_mode
     else:
         new_list = []
         for i in range(len_table):
             new_list.append(list_table[i][0])
-        max_mode = max(new_list) # use the max value here
-    return max_mode 
+        middle = findMiddle(new_list) # get the mode in the middle of the list
+        if len(middle) == 1:
+            return middle[0]
+        else:
+            return max(middle)
 
 
 class dist_report():
@@ -63,7 +88,7 @@ class dist_report():
         self.mn = min(x)
         self.mx = max(x)
         self.ave = np.mean(x)
-        self.md = find_max_mode(x)
+        self.md = find_mode_mode(x)
         self.sd = np.std(x)
         self.kurt = kurtosis(x)
         self.skew = skew(x)
@@ -94,7 +119,7 @@ def density_plot(x, nplot=500, save_file="/tmp/density_plt.svg"):
     subst = x.head(n=nplot) #x.head(n=45435)
     set_matplotlib_formats('png', 'pdf')
     # Density Plot and Histogram of all arrival delays
-    sns.displot(subst.tolist(), kde=True, 
+    dplot = sns.displot(subst.tolist(), kde=True, 
              bins=int(50), color = 'darkblue')
     plt.savefig(save_file, format="svg")
     return save_file
@@ -102,29 +127,21 @@ def density_plot(x, nplot=500, save_file="/tmp/density_plt.svg"):
 
 #exampe usage:
 #var_analysis(df, 'difference', nplot=100)
-def var_analysis(df, vname, nplot=500):
+def var_analysis(df, vname, nplot=500, save_file="/tmp/density_plt.svg"):
     """
     Do an in depth analysis of a single varible
     df - a pandas dataframe
     vname - variable to do the analysis on
     nplot - number of data points to include in plot
         nplot is mostly so that unbalanced histograms don't explode out of control
+    This is just a pretty veneer on top of the other functions above, so not tested, but probably what most will use
     """
     x = df[vname]
-    print("Statistics for  Variable: " + vname)
-    num = len(x)
-    print("Number of Data Points: " + str(num))
-    mn = min(x)
-    print("Min: " + str(mn))
-    mx = max(x)
-    print("Max: " + str(mx))
-    ave = np.mean(x)
-    print("Mean: " + str(ave))
-    md = find_max_mode(x)
-    print("Mode: " + str(md))
-    sd = np.std(x)
-    print("Variance: " + str(sd))
-    print( 'Excess kurtosis of normal distribution (should be 0): {}'.format( kurtosis(x) ))
-    print( 'Skewness of normal distribution (should be 0): {}'.format( skew(x) ))
+    report = dist_report(df, vname)
+    print(report)
+    svg_file = density_plot(x, nplot, save_file)
+    render_me = [svg_file]
+    #notebook_display_image_svg(render_me)
+
 
 
