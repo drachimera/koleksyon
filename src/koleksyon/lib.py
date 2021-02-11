@@ -114,6 +114,9 @@ def density_plot(x, nplot=500, save_file="/tmp/density_plt.svg"):
     nplot - number of data points to take in the plot (helps see skewed data if we don't plot all of it)
     save_file - a temporary file where we place the image - the path to this is what is returned
     """
+    #TODO:  figure out if I need to manipulate the output further to make it look better
+    #sns.set(color_codes=True)
+    #sns.set(rc={'figure.figsize':(10,10)})
     if os.path.exists(save_file):
         os.remove(save_file)
     subst = x.head(n=nplot) #x.head(n=45435)
