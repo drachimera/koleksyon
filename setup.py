@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
 
+from distutils.core import setup
+from Cython.Build import cythonize
+
+#setup(name="mcmc",
+#      ext_modules=cythonize("mcmc.pyx"))
+
 setup(
     # This is the name of your project. The first time you publish this
     # package, this name will be registered for you. It will determine how
@@ -15,13 +21,14 @@ setup(
     # https://packaging.python.org/specifications/core-metadata/#name
     name='koleksyon',  # Required
 
+    ext_modules=cythonize("./src/koleksyon/mcmc.pyx", compiler_directives={'language_level' : "3"}),
     # Versions should comply with PEP 440:
     # https://www.python.org/dev/peps/pep-0440/
     #
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.3',  # Required
+    version='0.0.4',  # Required
 
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
