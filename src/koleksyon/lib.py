@@ -11,9 +11,16 @@ from scipy.stats import kurtosis, skew
 from scipy.stats import uniform
 from scipy.stats import norm
 
+#ml
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+from sklearn.impute import SimpleImputer
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+
 #data
 import numpy as np
 import pandas as pd
+import koleksyon.dta as dd
 
 #plot
 import seaborn as sns
@@ -147,4 +154,141 @@ def var_analysis(df, vname, nplot=500, save_file="/tmp/density_plt.svg"):
     #notebook_display_image_svg(render_me)
 
 
+#TODO: test me!
+def clean_dataset(df):
+    assert isinstance(df, pd.DataFrame), "df needs to be a pd.DataFrame"
+    df.dropna(inplace=True)
+    indices_to_keep = ~df.isin([np.nan, np.inf, -np.inf]).any(1)
+    return df[indices_to_keep].astype(np.float64)
 
+#TODO: test me!
+#TODO: this is a bad name for what it is doing... probably should be named imputeTTSplit - for impute and remove NAs then do the scikit learn stuff...
+#Utility function for creating training/testing data from a dataframe
+#def data_prep(df2, target_variable):
+#    df2 = clean_dataset(df2)  #TODO: there is probably a better way to deal with null data, imputation for example, need to put this in the lib
+#    y = df2[target_variable]
+#    X = df2.drop([target_variable], axis=1)
+#    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+#    return X_train, X_test, y_train, y_test
+
+def data_prep(df, target_variable, missing_strategy="impute", balance_strategy="none", test_size=0.2):
+    """
+    Prepare the data for machine learning.
+    df - original pandas dataframe
+    target_variable - y, or the thing we are trying to predict.
+    missing_strategy - how should we handle missing data / NA's?
+        none=don't do anything
+        droprow=drop all the rows with na,
+        dropcol=drop all the columns with na, 
+        fillna=fill all missing with -1, 
+        fillave=fill missing columns with the average value for the column
+        impute=sklearn.SimpleImputer, 
+        iterative=sklearn.IterativeImputer
+    balance_strategy - when the dataset is inbalanced, how do we try to correct it?
+        none=don't do anything
+        smote=apply smote to try to generate rows to balance the dataset
+    test_size - the % of data you want in training vs testing... note, using 0 is a good hack for production... as it will do the same data prep operations
+    """
+    df2 = df
+    if missing_strategy is "droprow":
+        df2 = df.dropna()
+    if missing_strategy is "dropcol":
+        df2 = df.dropna()
+    if missing_strategy is "fillna":
+        df2 = df.fillna(-1)
+    #do the multi-line scikit data prep
+    
+    if target_variable in df2.columns:  
+        y = df2[target_variable]
+        X = df2.drop([target_variable], axis=1)
+        if(test_size == 1.0):
+            return None, X, None, y
+        elif(test_size == 0.0):
+            return X, None, y, None
+        else:
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size)
+            return X_train, X_test, y_train, y_test
+    else:  #production data won't have a target, so just return what we can
+        X = df2 
+        y = None
+        return X, X, y, y 
+
+
+#TODO: test me!
+#original post: https://towardsdatascience.com/a-data-scientists-guide-to-python-modules-and-packages-9193a861c26b
+#usage:
+#scale_data_list = data.select_dtypes(include=['int64', 'float64']).columns
+#scale_data_df = pr.scale_data(data, scale_data_list)
+def scale_data(df, column_list):
+    """Takes in a dataframe and a list of column names to transform
+     returns a dataframe of scaled values"""
+    df_to_scale = df[column_list]
+    x = df_to_scale.values
+    min_max_scaler = preprocessing.MinMaxScaler()
+    x_scaled = min_max_scaler.fit_transform(x)
+    df_to_scale = pd.DataFrame(x_scaled, columns=df_to_scale.columns)
+    return df_to_scale
+
+#TODO: test me!
+#usage:
+#reduce_uniques_dict = {'education' : 1000,'occupation' : 3000, 'native-country' : 100}
+#reduce_uniques_df = ll.reduce_uniques(data, reduce_uniques_dict)
+def reduce_uniques(df, column_threshold_dict):
+    """Takes in a dataframe and a dictionary consisting
+    of column name : value count threshold returns the original
+    dataframe"""
+    for key, value in column_threshold_dict.items():
+            counts = df[key].value_counts()
+            others = set(counts[counts < value].index)
+            df[key] = df[key].replace(list(others), 'Others')
+            return df
+
+#TODO: Test me!
+def accuracy(data_y, npred, test="TEST"):
+    mse = mean_squared_error(data_y, npred)
+    r2 = r2_score(data_y, npred)
+    print("**" + test + "**")
+    print(test + " mean squared error = " + str(mse))
+    rmse = math.sqrt(mse)
+    print(test + " sqrt( mean squared error ) = " + str(rmse))
+    print(test + " r2 value = " + str(r2))
+    return rmse, mse, r2
+
+#TODO: Test me!
+def load_keep_columns(file):
+    with open(file) as f:
+        lines = f.read().splitlines()
+    return lines
+
+#TODO: Test me!
+def load_drop_columns(df, targets, file):
+    keep_columns = load_keep_columns(file)
+    categorical_features, numeric_features = dd.get_features_by_type(df, targets)
+    drop = []
+    keep = []
+    for feature in categorical_features:
+        if(feature in keep_columns):
+            keep.append(feature)
+        else:
+            drop.append(feature)
+    for feature in numeric_features:
+        if(feature in keep_columns):
+            keep.append(feature)
+        else:
+            drop.append(feature)
+    return drop
+
+#TODO: Test me!
+def fix_uncommon_keys(df, field, threshold=1, replaceValue="-1"):
+    """
+    sometimes we get values in a column that are really really rare, and those keys hurt rather than help machine learning algorithms.  This replaces those keys with unknown (-1)
+    """
+    hm = df[field].value_counts().to_dict()
+    allowed_vals = []
+    for k, v in hm.items():
+        if v > threshold:
+            allowed_vals.append(k)
+
+    f = ~(df[field].isin(allowed_vals))
+    df.loc[f, field] = replaceValue
+    return df 
