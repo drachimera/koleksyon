@@ -43,7 +43,7 @@ setup(
     #
     # This field corresponds to the "Description" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#description-optional
-    long_description="TODO:",  # Optional
+    long_description="A collection of statistical functions and data manipulation functions and methods for use in data science projects.  This project is built from real industry problems in the field of healthcare (not toy examples).  It contains some of the tricks used to build models across orginizations when the models have an operations bent to them.  Github repo is here: https://github.com/drachimera/koleksyon",  # Optional
 
     # Denotes that our long_description is in Markdown; valid values are
     # text/plain, text/x-rst, and text/markdown
