@@ -7,6 +7,7 @@ import unittest
 import pandas as pd
 import hashlib  #should just be needed in testing to see if the contents of a generated file are correct
 import koleksyon.lib as ll
+import koleksyon.dta as dd
 
 
 def check_contents(md5, filepath, ignore):
@@ -81,7 +82,6 @@ class TestLib(unittest.TestCase):
 
     def test_density_plot(self):
         print("Testing Density Plot...")
-
         # Correct original md5
         original_md5 = '07e1b5ecbc2f03eb8a1e7dc3b586a751' 
 
@@ -92,7 +92,17 @@ class TestLib(unittest.TestCase):
         #check that the rendering is the same as what we expect for this data/variable
         self.assertTrue(check_contents(original_md5, pltFile, ["<dc:date>", "style=", "path clip-path=", "clipPath id=", "xlink:href"]))
             
-        
+    def test_data_prep(self):
+        print("Testing data_prep:")
+        df = dd.load_parquet("../data/melbourne/", "melbourne_") 
+        #first, don't do anything to the data... should have same number of rows as original...
+        X_train, X_test, y_train, y_test = ll.data_prep(df, 'Price', missing_strategy='none', test_size=1.0)
+        self.assertEqual(len(df), len(X_test))
+        self.assertEqual(len(df), len(y_test))
+        X_train, X_test, y_train, y_test = ll.data_prep(df, 'Price', missing_strategy='droprow', test_size=1.0)
+        #notice how this removes rows...
+        self.assertEqual(1778, len(X_test))
+        self.assertEqual(1778, len(y_test))
 
     #def test_var_analysis(self):
     #    df = pd.read_csv("../data/cars.csv")
