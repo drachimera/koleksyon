@@ -4930,7 +4930,7 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_15SimulationArray_20calculate_errors_
  *             else:
  *                 errors_on_row = np.concatenate((errors_on_row, error_bucket), axis=None)             # <<<<<<<<<<<<<<
  *         return errors_on_row
- *     #def calculate_summary_stats_row(self, rowStr):
+ * #TODO: make this into an easy to use exploration tool with density plots!  It doesn't really belong in the simulator
  */
     /*else*/ {
       __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 163, __pyx_L1_error)
@@ -4978,8 +4978,8 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_15SimulationArray_20calculate_errors_
  *             else:
  *                 errors_on_row = np.concatenate((errors_on_row, error_bucket), axis=None)
  *         return errors_on_row             # <<<<<<<<<<<<<<
- *     #def calculate_summary_stats_row(self, rowStr):
- *     #    erStr = "errors"
+ * #TODO: make this into an easy to use exploration tool with density plots!  It doesn't really belong in the simulator
+ * #or perhaps it does, if we combine summary stats for the entire simulation as a dataframe!
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_errors_on_row);
@@ -5012,7 +5012,7 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_15SimulationArray_20calculate_errors_
   return __pyx_r;
 }
 
-/* "koleksyon/mcmc.pyx":178
+/* "koleksyon/mcmc.pyx":183
  * #locations == the places or concepts where events happened, unique identifier
  * 
  * def power_analysis(n_sims, df_agg_gl, rolled_list, lvl ):             # <<<<<<<<<<<<<<
@@ -5058,23 +5058,23 @@ static PyObject *__pyx_pw_9koleksyon_4mcmc_1power_analysis(PyObject *__pyx_self,
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_df_agg_gl)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("power_analysis", 1, 4, 4, 1); __PYX_ERR(0, 178, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("power_analysis", 1, 4, 4, 1); __PYX_ERR(0, 183, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_rolled_list)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("power_analysis", 1, 4, 4, 2); __PYX_ERR(0, 178, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("power_analysis", 1, 4, 4, 2); __PYX_ERR(0, 183, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lvl)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("power_analysis", 1, 4, 4, 3); __PYX_ERR(0, 178, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("power_analysis", 1, 4, 4, 3); __PYX_ERR(0, 183, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "power_analysis") < 0)) __PYX_ERR(0, 178, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "power_analysis") < 0)) __PYX_ERR(0, 183, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -5091,7 +5091,7 @@ static PyObject *__pyx_pw_9koleksyon_4mcmc_1power_analysis(PyObject *__pyx_self,
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("power_analysis", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 178, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("power_analysis", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 183, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("koleksyon.mcmc.power_analysis", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -5132,16 +5132,16 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
   PyObject *__pyx_t_12 = NULL;
   __Pyx_RefNannySetupContext("power_analysis", 0);
 
-  /* "koleksyon/mcmc.pyx":179
+  /* "koleksyon/mcmc.pyx":184
  * 
  * def power_analysis(n_sims, df_agg_gl, rolled_list, lvl ):
  *     output = pd.DataFrame()             # <<<<<<<<<<<<<<
  *     for i_sim in range(n_sims):
  *         #print('i_sim',i_sim)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_pd); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 179, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_pd); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_DataFrame); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 179, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_DataFrame); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -5156,28 +5156,28 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 179, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_output = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "koleksyon/mcmc.pyx":180
+  /* "koleksyon/mcmc.pyx":185
  * def power_analysis(n_sims, df_agg_gl, rolled_list, lvl ):
  *     output = pd.DataFrame()
  *     for i_sim in range(n_sims):             # <<<<<<<<<<<<<<
  *         #print('i_sim',i_sim)
  *         for d in range(len(df_agg_gl)):
  */
-  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_v_n_sims); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 180, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_v_n_sims); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 185, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
     __pyx_t_3 = __pyx_t_1; __Pyx_INCREF(__pyx_t_3); __pyx_t_4 = 0;
     __pyx_t_5 = NULL;
   } else {
-    __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 180, __pyx_L1_error)
+    __pyx_t_4 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 185, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_5 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 180, __pyx_L1_error)
+    __pyx_t_5 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 185, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   for (;;) {
@@ -5185,17 +5185,17 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
       if (likely(PyList_CheckExact(__pyx_t_3))) {
         if (__pyx_t_4 >= PyList_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 180, __pyx_L1_error)
+        __pyx_t_1 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 185, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 180, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 185, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       } else {
         if (__pyx_t_4 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 180, __pyx_L1_error)
+        __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_4); __Pyx_INCREF(__pyx_t_1); __pyx_t_4++; if (unlikely(0 < 0)) __PYX_ERR(0, 185, __pyx_L1_error)
         #else
-        __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 180, __pyx_L1_error)
+        __pyx_t_1 = PySequence_ITEM(__pyx_t_3, __pyx_t_4); __pyx_t_4++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 185, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         #endif
       }
@@ -5205,7 +5205,7 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 180, __pyx_L1_error)
+          else __PYX_ERR(0, 185, __pyx_L1_error)
         }
         break;
       }
@@ -5214,30 +5214,30 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
     __Pyx_XDECREF_SET(__pyx_v_i_sim, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "koleksyon/mcmc.pyx":182
+    /* "koleksyon/mcmc.pyx":187
  *     for i_sim in range(n_sims):
  *         #print('i_sim',i_sim)
  *         for d in range(len(df_agg_gl)):             # <<<<<<<<<<<<<<
  *             act_agg_ch = df_agg_gl.iloc[d,3]
  *             enc_cnt = df_agg_gl.iloc[d,2]
  */
-    __pyx_t_6 = PyObject_Length(__pyx_v_df_agg_gl); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 182, __pyx_L1_error)
+    __pyx_t_6 = PyObject_Length(__pyx_v_df_agg_gl); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 187, __pyx_L1_error)
     __pyx_t_7 = __pyx_t_6;
     for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
       __pyx_v_d = __pyx_t_8;
 
-      /* "koleksyon/mcmc.pyx":183
+      /* "koleksyon/mcmc.pyx":188
  *         #print('i_sim',i_sim)
  *         for d in range(len(df_agg_gl)):
  *             act_agg_ch = df_agg_gl.iloc[d,3]             # <<<<<<<<<<<<<<
  *             enc_cnt = df_agg_gl.iloc[d,2]
  *             date = df_agg_gl.iloc[d,0]
  */
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_df_agg_gl, __pyx_n_s_iloc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 183, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_df_agg_gl, __pyx_n_s_iloc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 188, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_d); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 183, __pyx_L1_error)
+      __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_d); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 188, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 183, __pyx_L1_error)
+      __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 188, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_GIVEREF(__pyx_t_2);
       PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_2);
@@ -5245,25 +5245,25 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
       __Pyx_GIVEREF(__pyx_int_3);
       PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_int_3);
       __pyx_t_2 = 0;
-      __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_1, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 183, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_t_1, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 188, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_XDECREF_SET(__pyx_v_act_agg_ch, __pyx_t_2);
       __pyx_t_2 = 0;
 
-      /* "koleksyon/mcmc.pyx":184
+      /* "koleksyon/mcmc.pyx":189
  *         for d in range(len(df_agg_gl)):
  *             act_agg_ch = df_agg_gl.iloc[d,3]
  *             enc_cnt = df_agg_gl.iloc[d,2]             # <<<<<<<<<<<<<<
  *             date = df_agg_gl.iloc[d,0]
  * 
  */
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_df_agg_gl, __pyx_n_s_iloc); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 184, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_df_agg_gl, __pyx_n_s_iloc); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_9 = PyInt_FromSsize_t(__pyx_v_d); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 184, __pyx_L1_error)
+      __pyx_t_9 = PyInt_FromSsize_t(__pyx_v_d); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 184, __pyx_L1_error)
+      __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GIVEREF(__pyx_t_9);
       PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_9);
@@ -5271,25 +5271,25 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
       __Pyx_GIVEREF(__pyx_int_2);
       PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_int_2);
       __pyx_t_9 = 0;
-      __pyx_t_9 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 184, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_XDECREF_SET(__pyx_v_enc_cnt, __pyx_t_9);
       __pyx_t_9 = 0;
 
-      /* "koleksyon/mcmc.pyx":185
+      /* "koleksyon/mcmc.pyx":190
  *             act_agg_ch = df_agg_gl.iloc[d,3]
  *             enc_cnt = df_agg_gl.iloc[d,2]
  *             date = df_agg_gl.iloc[d,0]             # <<<<<<<<<<<<<<
  * 
  *             rolled_ch_total=0
  */
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_df_agg_gl, __pyx_n_s_iloc); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 185, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_df_agg_gl, __pyx_n_s_iloc); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 190, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_d); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 185, __pyx_L1_error)
+      __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_d); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 190, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 185, __pyx_L1_error)
+      __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 190, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_GIVEREF(__pyx_t_1);
       PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
@@ -5297,14 +5297,14 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
       __Pyx_GIVEREF(__pyx_int_0);
       PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_int_0);
       __pyx_t_1 = 0;
-      __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_t_9, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 185, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_t_9, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 190, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_XDECREF_SET(__pyx_v_date, __pyx_t_1);
       __pyx_t_1 = 0;
 
-      /* "koleksyon/mcmc.pyx":187
+      /* "koleksyon/mcmc.pyx":192
  *             date = df_agg_gl.iloc[d,0]
  * 
  *             rolled_ch_total=0             # <<<<<<<<<<<<<<
@@ -5314,22 +5314,22 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
       __Pyx_INCREF(__pyx_int_0);
       __Pyx_XDECREF_SET(__pyx_v_rolled_ch_total, __pyx_int_0);
 
-      /* "koleksyon/mcmc.pyx":188
+      /* "koleksyon/mcmc.pyx":193
  * 
  *             rolled_ch_total=0
  *             for N in range(enc_cnt):             # <<<<<<<<<<<<<<
  *                 rolled_ch = random.choice(rolled_list)
  *                 rolled_ch_total = rolled_ch_total+rolled_ch
  */
-      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_v_enc_cnt); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 188, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_v_enc_cnt); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
         __pyx_t_2 = __pyx_t_1; __Pyx_INCREF(__pyx_t_2); __pyx_t_10 = 0;
         __pyx_t_11 = NULL;
       } else {
-        __pyx_t_10 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 188, __pyx_L1_error)
+        __pyx_t_10 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 193, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_11 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 188, __pyx_L1_error)
+        __pyx_t_11 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 193, __pyx_L1_error)
       }
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       for (;;) {
@@ -5337,17 +5337,17 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
           if (likely(PyList_CheckExact(__pyx_t_2))) {
             if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_2)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_10); __Pyx_INCREF(__pyx_t_1); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 188, __pyx_L1_error)
+            __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_10); __Pyx_INCREF(__pyx_t_1); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 193, __pyx_L1_error)
             #else
-            __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 188, __pyx_L1_error)
+            __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_1);
             #endif
           } else {
             if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_10); __Pyx_INCREF(__pyx_t_1); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 188, __pyx_L1_error)
+            __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_10); __Pyx_INCREF(__pyx_t_1); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 193, __pyx_L1_error)
             #else
-            __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 188, __pyx_L1_error)
+            __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_1);
             #endif
           }
@@ -5357,7 +5357,7 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
               if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-              else __PYX_ERR(0, 188, __pyx_L1_error)
+              else __PYX_ERR(0, 193, __pyx_L1_error)
             }
             break;
           }
@@ -5366,16 +5366,16 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
         __Pyx_XDECREF_SET(__pyx_v_N, __pyx_t_1);
         __pyx_t_1 = 0;
 
-        /* "koleksyon/mcmc.pyx":189
+        /* "koleksyon/mcmc.pyx":194
  *             rolled_ch_total=0
  *             for N in range(enc_cnt):
  *                 rolled_ch = random.choice(rolled_list)             # <<<<<<<<<<<<<<
  *                 rolled_ch_total = rolled_ch_total+rolled_ch
  *             error = abs(act_agg_ch-rolled_ch_total)
  */
-        __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_random); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 189, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_random); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 194, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
-        __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_choice); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 189, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_choice); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 194, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         __pyx_t_9 = NULL;
@@ -5390,25 +5390,25 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
         }
         __pyx_t_1 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_9, __pyx_v_rolled_list) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_v_rolled_list);
         __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 189, __pyx_L1_error)
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 194, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
         __Pyx_XDECREF_SET(__pyx_v_rolled_ch, __pyx_t_1);
         __pyx_t_1 = 0;
 
-        /* "koleksyon/mcmc.pyx":190
+        /* "koleksyon/mcmc.pyx":195
  *             for N in range(enc_cnt):
  *                 rolled_ch = random.choice(rolled_list)
  *                 rolled_ch_total = rolled_ch_total+rolled_ch             # <<<<<<<<<<<<<<
  *             error = abs(act_agg_ch-rolled_ch_total)
  *             new_row = {'level':lvl, 'SIMULATION':i_sim, 'SERVICE_DATE':date, 'act_vl':act_agg_ch, 'rolled_vl':rolled_ch_total, 'EROOR':error}
  */
-        __pyx_t_1 = PyNumber_Add(__pyx_v_rolled_ch_total, __pyx_v_rolled_ch); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 190, __pyx_L1_error)
+        __pyx_t_1 = PyNumber_Add(__pyx_v_rolled_ch_total, __pyx_v_rolled_ch); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 195, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF_SET(__pyx_v_rolled_ch_total, __pyx_t_1);
         __pyx_t_1 = 0;
 
-        /* "koleksyon/mcmc.pyx":188
+        /* "koleksyon/mcmc.pyx":193
  * 
  *             rolled_ch_total=0
  *             for N in range(enc_cnt):             # <<<<<<<<<<<<<<
@@ -5418,57 +5418,57 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
       }
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "koleksyon/mcmc.pyx":191
+      /* "koleksyon/mcmc.pyx":196
  *                 rolled_ch = random.choice(rolled_list)
  *                 rolled_ch_total = rolled_ch_total+rolled_ch
  *             error = abs(act_agg_ch-rolled_ch_total)             # <<<<<<<<<<<<<<
  *             new_row = {'level':lvl, 'SIMULATION':i_sim, 'SERVICE_DATE':date, 'act_vl':act_agg_ch, 'rolled_vl':rolled_ch_total, 'EROOR':error}
  *             output = output.append(new_row, ignore_index=True)
  */
-      __pyx_t_2 = PyNumber_Subtract(__pyx_v_act_agg_ch, __pyx_v_rolled_ch_total); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 191, __pyx_L1_error)
+      __pyx_t_2 = PyNumber_Subtract(__pyx_v_act_agg_ch, __pyx_v_rolled_ch_total); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_1 = __Pyx_PyNumber_Absolute(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 191, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyNumber_Absolute(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_XDECREF_SET(__pyx_v_error, __pyx_t_1);
       __pyx_t_1 = 0;
 
-      /* "koleksyon/mcmc.pyx":192
+      /* "koleksyon/mcmc.pyx":197
  *                 rolled_ch_total = rolled_ch_total+rolled_ch
  *             error = abs(act_agg_ch-rolled_ch_total)
  *             new_row = {'level':lvl, 'SIMULATION':i_sim, 'SERVICE_DATE':date, 'act_vl':act_agg_ch, 'rolled_vl':rolled_ch_total, 'EROOR':error}             # <<<<<<<<<<<<<<
  *             output = output.append(new_row, ignore_index=True)
  *     return output
  */
-      __pyx_t_1 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 192, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 197, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_level, __pyx_v_lvl) < 0) __PYX_ERR(0, 192, __pyx_L1_error)
-      if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_SIMULATION, __pyx_v_i_sim) < 0) __PYX_ERR(0, 192, __pyx_L1_error)
-      if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_SERVICE_DATE, __pyx_v_date) < 0) __PYX_ERR(0, 192, __pyx_L1_error)
-      if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_act_vl, __pyx_v_act_agg_ch) < 0) __PYX_ERR(0, 192, __pyx_L1_error)
-      if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_rolled_vl, __pyx_v_rolled_ch_total) < 0) __PYX_ERR(0, 192, __pyx_L1_error)
-      if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_EROOR, __pyx_v_error) < 0) __PYX_ERR(0, 192, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_level, __pyx_v_lvl) < 0) __PYX_ERR(0, 197, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_SIMULATION, __pyx_v_i_sim) < 0) __PYX_ERR(0, 197, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_SERVICE_DATE, __pyx_v_date) < 0) __PYX_ERR(0, 197, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_act_vl, __pyx_v_act_agg_ch) < 0) __PYX_ERR(0, 197, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_rolled_vl, __pyx_v_rolled_ch_total) < 0) __PYX_ERR(0, 197, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_1, __pyx_n_u_EROOR, __pyx_v_error) < 0) __PYX_ERR(0, 197, __pyx_L1_error)
       __Pyx_XDECREF_SET(__pyx_v_new_row, ((PyObject*)__pyx_t_1));
       __pyx_t_1 = 0;
 
-      /* "koleksyon/mcmc.pyx":193
+      /* "koleksyon/mcmc.pyx":198
  *             error = abs(act_agg_ch-rolled_ch_total)
  *             new_row = {'level':lvl, 'SIMULATION':i_sim, 'SERVICE_DATE':date, 'act_vl':act_agg_ch, 'rolled_vl':rolled_ch_total, 'EROOR':error}
  *             output = output.append(new_row, ignore_index=True)             # <<<<<<<<<<<<<<
  *     return output
  *     #output.to_csv(lvl+'_100sims'+'_output_parellel.csv')
  */
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_output, __pyx_n_s_append); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 193, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_output, __pyx_n_s_append); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 198, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 193, __pyx_L1_error)
+      __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 198, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_INCREF(__pyx_v_new_row);
       __Pyx_GIVEREF(__pyx_v_new_row);
       PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_new_row);
-      __pyx_t_12 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 193, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 198, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_ignore_index, Py_True) < 0) __PYX_ERR(0, 193, __pyx_L1_error)
-      __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_12); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 193, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_ignore_index, Py_True) < 0) __PYX_ERR(0, 198, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_12); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 198, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -5477,7 +5477,7 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
       __pyx_t_9 = 0;
     }
 
-    /* "koleksyon/mcmc.pyx":180
+    /* "koleksyon/mcmc.pyx":185
  * def power_analysis(n_sims, df_agg_gl, rolled_list, lvl ):
  *     output = pd.DataFrame()
  *     for i_sim in range(n_sims):             # <<<<<<<<<<<<<<
@@ -5487,7 +5487,7 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "koleksyon/mcmc.pyx":194
+  /* "koleksyon/mcmc.pyx":199
  *             new_row = {'level':lvl, 'SIMULATION':i_sim, 'SERVICE_DATE':date, 'act_vl':act_agg_ch, 'rolled_vl':rolled_ch_total, 'EROOR':error}
  *             output = output.append(new_row, ignore_index=True)
  *     return output             # <<<<<<<<<<<<<<
@@ -5499,7 +5499,7 @@ static PyObject *__pyx_pf_9koleksyon_4mcmc_power_analysis(CYTHON_UNUSED PyObject
   __pyx_r = __pyx_v_output;
   goto __pyx_L0;
 
-  /* "koleksyon/mcmc.pyx":178
+  /* "koleksyon/mcmc.pyx":183
  * #locations == the places or concepts where events happened, unique identifier
  * 
  * def power_analysis(n_sims, df_agg_gl, rolled_list, lvl ):             # <<<<<<<<<<<<<<
@@ -5904,17 +5904,17 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__28);
   __pyx_codeobj__29 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__28, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_koleksyon_mcmc_pyx, __pyx_n_s_calculate_errors_on_row, 156, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__29)) __PYX_ERR(0, 156, __pyx_L1_error)
 
-  /* "koleksyon/mcmc.pyx":178
+  /* "koleksyon/mcmc.pyx":183
  * #locations == the places or concepts where events happened, unique identifier
  * 
  * def power_analysis(n_sims, df_agg_gl, rolled_list, lvl ):             # <<<<<<<<<<<<<<
  *     output = pd.DataFrame()
  *     for i_sim in range(n_sims):
  */
-  __pyx_tuple__30 = PyTuple_Pack(15, __pyx_n_s_n_sims, __pyx_n_s_df_agg_gl, __pyx_n_s_rolled_list, __pyx_n_s_lvl, __pyx_n_s_output, __pyx_n_s_i_sim, __pyx_n_s_d, __pyx_n_s_act_agg_ch, __pyx_n_s_enc_cnt, __pyx_n_s_date, __pyx_n_s_rolled_ch_total, __pyx_n_s_N, __pyx_n_s_rolled_ch, __pyx_n_s_error, __pyx_n_s_new_row); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(0, 178, __pyx_L1_error)
+  __pyx_tuple__30 = PyTuple_Pack(15, __pyx_n_s_n_sims, __pyx_n_s_df_agg_gl, __pyx_n_s_rolled_list, __pyx_n_s_lvl, __pyx_n_s_output, __pyx_n_s_i_sim, __pyx_n_s_d, __pyx_n_s_act_agg_ch, __pyx_n_s_enc_cnt, __pyx_n_s_date, __pyx_n_s_rolled_ch_total, __pyx_n_s_N, __pyx_n_s_rolled_ch, __pyx_n_s_error, __pyx_n_s_new_row); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__30);
   __Pyx_GIVEREF(__pyx_tuple__30);
-  __pyx_codeobj__31 = (PyObject*)__Pyx_PyCode_New(4, 0, 15, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__30, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_koleksyon_mcmc_pyx, __pyx_n_s_power_analysis, 178, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__31)) __PYX_ERR(0, 178, __pyx_L1_error)
+  __pyx_codeobj__31 = (PyObject*)__Pyx_PyCode_New(4, 0, 15, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__30, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_koleksyon_mcmc_pyx, __pyx_n_s_power_analysis, 183, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__31)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -6417,16 +6417,16 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "koleksyon/mcmc.pyx":178
+  /* "koleksyon/mcmc.pyx":183
  * #locations == the places or concepts where events happened, unique identifier
  * 
  * def power_analysis(n_sims, df_agg_gl, rolled_list, lvl ):             # <<<<<<<<<<<<<<
  *     output = pd.DataFrame()
  *     for i_sim in range(n_sims):
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9koleksyon_4mcmc_1power_analysis, NULL, __pyx_n_s_koleksyon_mcmc); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 178, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9koleksyon_4mcmc_1power_analysis, NULL, __pyx_n_s_koleksyon_mcmc); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_power_analysis, __pyx_t_2) < 0) __PYX_ERR(0, 178, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_power_analysis, __pyx_t_2) < 0) __PYX_ERR(0, 183, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "koleksyon/mcmc.pyx":1
