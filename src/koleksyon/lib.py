@@ -12,10 +12,17 @@ from scipy.stats import uniform
 from scipy.stats import norm
 
 #ml
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 from sklearn.impute import SimpleImputer
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
+
+#performance stats
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+from sklearn.metrics import f1_score
+from sklearn.metrics import roc_auc_score
 
 #data
 import numpy as np
@@ -242,6 +249,76 @@ def reduce_uniques(df, column_threshold_dict):
             others = set(counts[counts < value].index)
             df[key] = df[key].replace(list(others), 'Others')
             return df
+
+
+class AccuracyStats:
+    def __init__(self, model_type='regressor'):
+        """
+        AccuracyStats - bring together common sklearn statistics, for rapid reporting
+        type = regressor/classifier
+        """
+        self.model_type = model_type
+        self.stats = {}
+    def __str__(self):
+        """
+        string representation of score statistics... great for putting in a model training loop!
+        """
+        return str(self.stats)
+    def calculate_stats(self, y_test, y_pred):
+        """
+        easy to remember convience method
+        """
+        if self.model_type is 'regressor':
+            return self.regression_stats(y_test, y_pred)
+        elif self.model_type is 'classifier':
+            return self.classification_stats(y_test, y_pred)
+    def classification_stats(self, y_test, y_pred):
+        """
+        calculate commonly used statistics for regression analysis
+        """
+        self.accuracy_score = accuracy_score(y_test, y_pred)  #sklearn; accuracy = num correct predictions / total predictions
+        self.stats['accuracy_score'] = self.accuracy_score
+        self.confusion_matrix = confusion_matrix(y_test, y_pred)
+        #self.stats['confusion_matrix'] = self.confusion_matrix --removing this option as we don't want to print this nested structure when we have it all broken out anyway
+        self.true_positives = self.confusion_matrix[0][0]
+        self.stats['true_positives'] = self.true_positives
+        self.false_positives = self.confusion_matrix[0][1]
+        self.stats['false_positives'] = self.false_positives
+        self.false_negatives = self.confusion_matrix[1][0]
+        self.stats['false_negatives'] = self.false_negatives
+        self.true_negatives = self.confusion_matrix[1][1]
+        self.stats['true_negatives'] = self.true_negatives
+        self.f1_score = f1_score(y_test, y_pred, average='macro')
+        self.stats['f1_score'] = self.f1_score
+        self.precision = float(self.true_positives) / ( float(self.true_positives) + float(self.false_positives) )
+        self.stats['precision'] = self.precision
+        self.recall = float(self.true_positives) / ( float(self.true_positives) + float(self.false_negatives) )
+        self.stats['recall'] = self.recall
+        self.roc_auc = roc_auc_score(y_test, y_pred)
+        self.stats['roc_auc'] = self.roc_auc
+
+        #REF: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.auc.html
+        #REF: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html#sklearn.metrics.roc_auc_score
+
+        return self.stats
+
+        #if(alg_type == "classifier"):
+        #    score = f1_score(y_test, y_pred, average='macro')
+        #    print("F1 Score = " + str(score))
+        #elif(alg_type == "regressor"):
+        #    score = r2_score(y_test, y_pred)
+        #    print("R2 Score = " + str(score)) 
+    def classification_report(self, y_test, y_pred, targets):
+        """
+        wrapper method, I always forget where to import this from sklearn!
+        """
+        return classification_report(y_test, y_pred, target_names=targets)
+    #TODO: need ability to plot ROC
+    def regression_stats(self, y_test, y_pred):
+        return self.stats 
+
+    
+
 
 #TODO: Test me!
 def accuracy(data_y, npred, test="TEST"):

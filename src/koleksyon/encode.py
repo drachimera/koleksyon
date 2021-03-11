@@ -45,16 +45,98 @@ def get_encoders():
                 ]
     return encoder_list
 
-def train_test(df, target_name, max_samples):
+def variables_by_type(df, target_name):
+    """
+    easy method to get back catigorical and numeric fields in the dataframe (I always forget the exact syntax) AND you always have to take out the target!
+    """
+    categorical_features = df.select_dtypes(include=['object']).columns
+    if target_name in categorical_features:
+        categorical_features = categorical_features.drop(target_name)
+    #print(categorical_features)
+    numeric_features = df.select_dtypes(include=['int64', 'float64']).columns
+    if target_name in numeric_features:
+        numeric_features = numeric_features.drop(target_name)
+    #print(numeric_features)
+    return categorical_features, numeric_features
+
+#TODO: make this routine more general
+def train_test(df, target_name, max_samples=-1, etest_size=0.2):
     # Build training/testing
     print("Building Train/Test dataset")
+    if max_samples == -1:
+        max_samples = len(df) + 1  #if -1, use the entire dataset
     X = df.drop(target_name, axis=1).head(max_samples)
     y = df[target_name].head(max_samples)
     le = preprocessing.LabelEncoder()
     label_encoder = le.fit(y)
     y = label_encoder.transform(y)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=etest_size)
     return X_train, X_test, y_train, y_test
+
+
+class EncodePipeline:
+    def __init__(self, df, target_name):
+        """
+        df - well formed dataframe containing the data in a table organized for conventional regression/classification
+        target_name - name of the variable in df that we are going to attempt to predict
+        """
+        self.df = df
+        self.target_name = target_name
+        self.categorical_features, self.numeric_features = variables_by_type(df, target_name)
+    def create_basic_encode_pipeline(self, encoder, algorithm, alg_type):
+        """
+        Call this function when you want a basic encode pipeline without doing a bunch of coding.  It will do the following:
+        - Simple Imputation
+        - Data Scaling
+        - transformer (whatever is provided)
+        - transformers
+        - algorithm (provided): code needs to inherit from the sklearn estimator interface.  example of how to do this (for custom transformer): https://towardsdatascience.com/custom-transformers-and-ml-data-pipelines-with-python-20ea2a7adb65
+        @params:
+        encoder - text string specifying the encoder (same as what is returned from 'get encoders')
+        algorithm: an object... instance of an estimator
+        alg_type: "regressor"/"classifier"
+        @return - a scikit pipeline that you can call pipe.fit on
+        """
+        self.alg_type = alg_type
+        self.algorithm = algorithm
+        self.encoder = encoder
+
+        numeric_transformer = Pipeline(steps=[
+            ('imputer', SimpleImputer(strategy='median')),
+            ('scaler', StandardScaler())])
+
+        categorical_transformer = Pipeline(steps=[
+            ('imputer', SimpleImputer(strategy='constant', fill_value='missing')),
+            ('woe', encoder())])
+
+        preprocessor = ColumnTransformer(
+            transformers=[
+                ('num', numeric_transformer, self.numeric_features),
+                ('cat', categorical_transformer, self.categorical_features)
+                ])
+
+        pipe = Pipeline(steps=[('preprocessor', preprocessor),
+                            (alg_type, algorithm)])
+        self.pipeline = pipe
+        return pipe
+
+    def evaluate_pipeline(self):
+        """
+        Evaluate a specific pipeline on the dataframe, df - we have a link to it because of the constructor
+        """
+        X_train, X_test, y_train, y_test = train_test(self.df, self.target_name)
+        print("*******************************************************************")
+        print(self.encoder)
+        print("Training....")
+        model = self.pipeline.fit(X_train, y_train)
+
+        print("Predicting....")
+        y_pred = model.predict(X_test)
+        print("*******************************************************************")
+        
+
+
+
 
 def evaluate(df, target_name, encoders, algorithm, alg_type, max_samples=500): #note max_samples is really small!
     #target_name is the name of the target variable in the dataframe, e.g. the thing we are trying to predict
