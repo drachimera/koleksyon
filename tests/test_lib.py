@@ -16,6 +16,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestRegressor
 
 #testing datasets
 from sklearn.datasets import load_breast_cancer
@@ -133,6 +134,7 @@ class TestLib(unittest.TestCase):
 
     #test based on: https://towardsdatascience.com/a-practical-guide-to-seven-essential-performance-metrics-for-classification-using-scikit-learn-2de0e0a8a040
     def test_AccuracyStats_classifier(self):
+        print("Testing Accuracy Statistics on a Simple Classifier...")
         #STEP 1: prep data
         br_cancer = load_breast_cancer()
         #note we could leverage the data prep functions in koleksyon to make this easier, but this is simpler for a test...
@@ -163,6 +165,18 @@ class TestLib(unittest.TestCase):
         stats_sgd = astats_sgd.calculate_stats(y_test, y_pred_sgd)
         astats_log = ll.AccuracyStats('classifier')
         stats_log = astats_log.calculate_stats(y_test, y_pred_log)
+
+        #first check that we can get a string output from the stats calculations (check the individual values of the computations in next section)
+        #this is a handy way to just print the stats in the object...
+        knn_str = str(astats_knn)
+        print(knn_str)
+        self.assertGreater(len(knn_str), 1)
+        sgd_str = str(stats_sgd)
+        print(sgd_str)
+        self.assertGreater(len(sgd_str), 1)
+        log_str = str(astats_log)
+        print(log_str)
+        self.assertGreater(len(log_str), 1)
 
         #check the accuracy statistics are correct
         self.assertAlmostEqual(0.9590643274853801, stats_knn['accuracy_score'])  #or astats_knn.accuracy_score, both work
@@ -209,7 +223,70 @@ class TestLib(unittest.TestCase):
         self.assertAlmostEqual(0.9656084656084655, stats_sgd['roc_auc'])
         self.assertAlmostEqual(0.9828042328042328, stats_log['roc_auc'])
 
+    def test_AccuracyStats_regressor(self):
+        print("Testing Accuracy Statistics on a Simple Regressor...")
+        #pd.set_option('display.max_columns', None)
+        df = pd.read_csv("../data/imports85.csv")
+        
+        # Prep the Data
+        #
+        #don't want to deal with the empty data nonsense
+        df = df.fillna(-1)
+        df = df.replace('?', -1)
+        print(df)
 
+        #the data is all catigorical, so we need to use some sort of encoder, a one-hot encoder is simple and makes the test clear, so we use that
+        #here we just use pandas... there are easier ways to encode stuff in the category encoders package (look in encode.py in this package!)
+        #-- just don't want a circular dependancy.. (don't use this in production, its also slow!)
+        columns = ['make','fuel-type','aspiration','num-of-doors','body-style','drive-wheels','engine-location', 'engine-type', 'num-of-cylinders', 'fuel-system'] #        
+        i = 1
+        for col in columns:
+            one_hot = pd.get_dummies(df[col], prefix=str(i))
+            #drop the encoded stuff as it is now redundant
+            df = df.drop([col],axis = 1)
+            # join the dataframes
+            df = df.join(one_hot)
+            i = i + 1
+        print(df)
+
+        y = df['price']
+        X = df.drop(['price'], axis=1)
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(X)
+        X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.3, random_state=42)
+
+        #build a simple algorithm, create predition
+        rf = RandomForestRegressor(n_estimators = 1000, random_state = 42)
+        rf.fit(X_train, y_train)
+        y_pred = rf.predict(X_test)
+
+        # calculate statistics -- the thing we are actually testing XooX!
+        #
+        rfstats = ll.AccuracyStats('regressor')
+        stats = rfstats.calculate_stats(y_test, y_pred)
+        
+        print("Checking AccuracyStats for regression...")
+        print(stats)
+        #{'mean_squared_error': 12344135.436750872, 'mean_absolute_error': 1893.6762903225806, 'sqrt_mean_squared_error': 3513.422183107358, 'r2_score': 0.8329095430495994}
+        self.assertGreater(len(str(stats)), 1) #we have statistics in the generated string
+        self.assertAlmostEqual(12344135.436750872, rfstats.mean_squared_error)  #or stats['mean_squared_error'] and so on for the next 3 tests
+        self.assertAlmostEqual(1893.6762903225806, rfstats.mean_absolute_error)
+        self.assertAlmostEqual(3513.422183107358, rfstats.sqrt_mean_squared_error)
+        self.assertAlmostEqual(0.8329095430495994, rfstats.r2_score)
+        
+
+
+
+    #print("Setting Up Machine Learning Algorithm...")
+    #algtype = "regressor"
+    #alg = RandomForestRegressor(n_estimators=500)
+    #print("Getting Encoders for Evaluation...")
+    #encoders = get_encoders()
+    ##remove some encoders you don't want... e.g. woe encoders don't work on regression!
+    #encoders.remove(ce.woe.WOEEncoder)
+    #print(encoders)
+    #print("Evaluating the Various Encoders...")
+    #evaluate(car_data, 'price', encoders, alg, algtype)
 
 if __name__ == '__main__':
     unittest.main()

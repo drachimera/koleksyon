@@ -315,6 +315,14 @@ class AccuracyStats:
         return classification_report(y_test, y_pred, target_names=targets)
     #TODO: need ability to plot ROC
     def regression_stats(self, y_test, y_pred):
+        self.mean_squared_error = mean_squared_error(y_test, y_pred)
+        self.stats['mean_squared_error'] = self.mean_squared_error
+        self.mean_absolute_error = mean_absolute_error(y_test, y_pred)
+        self.stats['mean_absolute_error'] = self.mean_absolute_error
+        self.sqrt_mean_squared_error = math.sqrt(self.mean_squared_error)
+        self.stats['sqrt_mean_squared_error'] = self.sqrt_mean_squared_error
+        self.r2_score = r2_score(y_test, y_pred)
+        self.stats['r2_score'] = self.r2_score
         return self.stats 
 
     
