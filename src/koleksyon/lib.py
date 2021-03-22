@@ -168,6 +168,7 @@ def clean_dataset(df):
     indices_to_keep = ~df.isin([np.nan, np.inf, -np.inf]).any(1)
     return df[indices_to_keep].astype(np.float64)
 
+#TODO: this belongs in encode, not lib!  encode is where we put all the data pre-proc functions!
 #TODO: test me!
 #TODO: this is a bad name for what it is doing... probably should be named imputeTTSplit - for impute and remove NAs then do the scikit learn stuff...
 #Utility function for creating training/testing data from a dataframe
@@ -325,19 +326,18 @@ class AccuracyStats:
         self.stats['r2_score'] = self.r2_score
         return self.stats 
 
-    
 
-
-#TODO: Test me!
-def accuracy(data_y, npred, test="TEST"):
-    mse = mean_squared_error(data_y, npred)
-    r2 = r2_score(data_y, npred)
-    print("**" + test + "**")
-    print(test + " mean squared error = " + str(mse))
-    rmse = math.sqrt(mse)
-    print(test + " sqrt( mean squared error ) = " + str(rmse))
-    print(test + " r2 value = " + str(r2))
-    return rmse, mse, r2
+#TODO: We need a function that does a pretty print of the accuracy stats with a label, but this ain't it!  perhaps call it pprint?
+#TODO: Note, that we can currently just print the object above... so most of the work is done
+#def accuracy(data_y, npred, test="TEST"):
+#    mse = mean_squared_error(data_y, npred)
+#    r2 = r2_score(data_y, npred)
+#    print("**" + test + "**")
+#    print(test + " mean squared error = " + str(mse))
+#    rmse = math.sqrt(mse)
+#    print(test + " sqrt( mean squared error ) = " + str(rmse))
+#    print(test + " r2 value = " + str(r2))
+#    return rmse, mse, r2
 
 #TODO: Test me!
 def load_keep_columns(file):
@@ -347,6 +347,12 @@ def load_keep_columns(file):
 
 #TODO: Test me!
 def load_drop_columns(df, targets, file):
+    """
+    Loads a dataframe with only a subset of the columns
+    TODO: we probably need to delete this because this exists:
+    df = pd.read_csv('data.csv', skipinitialspace=True, usecols=fields)
+    #https://stackoverflow.com/questions/26063231/read-specific-columns-with-pandas-or-other-python-module
+    """
     keep_columns = load_keep_columns(file)
     categorical_features, numeric_features = dd.get_features_by_type(df, targets)
     drop = []
@@ -363,17 +369,3 @@ def load_drop_columns(df, targets, file):
             drop.append(feature)
     return drop
 
-#TODO: Test me!
-def fix_uncommon_keys(df, field, threshold=1, replaceValue="-1"):
-    """
-    sometimes we get values in a column that are really really rare, and those keys hurt rather than help machine learning algorithms.  This replaces those keys with unknown (-1)
-    """
-    hm = df[field].value_counts().to_dict()
-    allowed_vals = []
-    for k, v in hm.items():
-        if v > threshold:
-            allowed_vals.append(k)
-
-    f = ~(df[field].isin(allowed_vals))
-    df.loc[f, field] = replaceValue
-    return df 

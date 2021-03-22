@@ -275,18 +275,5 @@ class TestLib(unittest.TestCase):
         self.assertAlmostEqual(0.8329095430495994, rfstats.r2_score)
         
 
-
-
-    #print("Setting Up Machine Learning Algorithm...")
-    #algtype = "regressor"
-    #alg = RandomForestRegressor(n_estimators=500)
-    #print("Getting Encoders for Evaluation...")
-    #encoders = get_encoders()
-    ##remove some encoders you don't want... e.g. woe encoders don't work on regression!
-    #encoders.remove(ce.woe.WOEEncoder)
-    #print(encoders)
-    #print("Evaluating the Various Encoders...")
-    #evaluate(car_data, 'price', encoders, alg, algtype)
-
 if __name__ == '__main__':
     unittest.main()

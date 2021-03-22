@@ -1,0 +1,16 @@
+,accuracy_score,true_positives,false_positives,false_negatives,true_negatives,f1_score,precision,recall,roc_auc
+<class 'category_encoders.backward_difference.BackwardDifferenceEncoder'>,0.7,13.0,0.0,6.0,1.0,0.53125,1.0,0.6842105263157895,0.5714285714285714
+<class 'category_encoders.basen.BaseNEncoder'>,0.75,13.0,0.0,5.0,2.0,0.6415770609318996,1.0,0.7222222222222222,0.6428571428571428
+<class 'category_encoders.binary.BinaryEncoder'>,0.75,13.0,0.0,5.0,2.0,0.6415770609318996,1.0,0.7222222222222222,0.6428571428571428
+<class 'category_encoders.cat_boost.CatBoostEncoder'>,0.65,13.0,0.0,7.0,0.0,0.393939393939394,1.0,0.65,0.5
+<class 'category_encoders.hashing.HashingEncoder'>,0.7,13.0,0.0,6.0,1.0,0.53125,1.0,0.6842105263157895,0.5714285714285714
+<class 'category_encoders.helmert.HelmertEncoder'>,0.75,13.0,0.0,5.0,2.0,0.6415770609318996,1.0,0.7222222222222222,0.6428571428571428
+<class 'category_encoders.james_stein.JamesSteinEncoder'>,0.75,13.0,0.0,5.0,2.0,0.6415770609318996,1.0,0.7222222222222222,0.6428571428571428
+<class 'category_encoders.one_hot.OneHotEncoder'>,0.75,13.0,0.0,5.0,2.0,0.6415770609318996,1.0,0.7222222222222222,0.6428571428571428
+<class 'category_encoders.leave_one_out.LeaveOneOutEncoder'>,0.65,12.0,1.0,6.0,1.0,0.4982078853046595,0.9230769230769231,0.6666666666666666,0.532967032967033
+<class 'category_encoders.m_estimate.MEstimateEncoder'>,0.75,13.0,0.0,5.0,2.0,0.6415770609318996,1.0,0.7222222222222222,0.6428571428571428
+<class 'category_encoders.ordinal.OrdinalEncoder'>,0.7,13.0,0.0,6.0,1.0,0.53125,1.0,0.6842105263157895,0.5714285714285714
+<class 'category_encoders.polynomial.PolynomialEncoder'>,0.7,12.0,1.0,5.0,2.0,0.6000000000000001,0.9230769230769231,0.7058823529411765,0.6043956043956044
+<class 'category_encoders.sum_coding.SumEncoder'>,0.75,13.0,0.0,5.0,2.0,0.6415770609318996,1.0,0.7222222222222222,0.6428571428571428
+<class 'category_encoders.target_encoder.TargetEncoder'>,0.7,13.0,0.0,6.0,1.0,0.53125,1.0,0.6842105263157895,0.5714285714285714
+<class 'category_encoders.woe.WOEEncoder'>,0.75,13.0,0.0,5.0,2.0,0.6415770609318996,1.0,0.7222222222222222,0.6428571428571428

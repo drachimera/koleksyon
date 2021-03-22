@@ -1,3 +1,6 @@
+import sys
+import warnings
+
 import pandas as pd
 import numpy as np
 from sklearn import preprocessing
@@ -11,6 +14,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.metrics import f1_score
 from sklearn.metrics import r2_score
 import category_encoders as ce
+import koleksyon.lib as ll
 
 #another useful site:
 #https://www.kaggle.com/subinium/11-categorical-encoders-and-benchmark
@@ -75,15 +79,33 @@ def train_test(df, target_name, max_samples=-1, etest_size=0.2):
 
 
 class EncodePipeline:
-    def __init__(self, df, target_name):
+    def __init__(self, df, target_name, alg_type):
         """
         df - well formed dataframe containing the data in a table organized for conventional regression/classification
         target_name - name of the variable in df that we are going to attempt to predict
+        alg_type: "regressor"/"classifier"/"unsupervised" - what type of problem are we solving?
         """
         self.df = df
         self.target_name = target_name
+        self.alg_type = alg_type
         self.categorical_features, self.numeric_features = variables_by_type(df, target_name)
-    def create_basic_encode_pipeline(self, encoder, algorithm, alg_type):
+    def get_basic_supervised_algorithm(self, testing=False):
+        """
+        In benchmarking various encoding stratigies we need a basic algorithm that trains fast and runs fast.  This just returns random forest for the problem type.
+        testing = True - set the random seed for testing uses, False, don't set the random seed
+        """
+        if self.alg_type is "regressor":
+            if testing == True:
+                alg = RandomForestRegressor(n_estimators=500, random_state = 42)
+            else:
+                alg = RandomForestRegressor(n_estimators=1000)
+        if self.alg_type is "classifier":
+            if testing == True:
+                alg = RandomForestClassifier(n_estimators=500, random_state = 42)
+            else:
+                alg = RandomForestClassifier(n_estimators=1000)
+        return alg
+    def create_basic_encode_pipeline(self, encoder, algorithm):
         """
         Call this function when you want a basic encode pipeline without doing a bunch of coding.  It will do the following:
         - Simple Imputation
@@ -94,10 +116,8 @@ class EncodePipeline:
         @params:
         encoder - text string specifying the encoder (same as what is returned from 'get encoders')
         algorithm: an object... instance of an estimator
-        alg_type: "regressor"/"classifier"
         @return - a scikit pipeline that you can call pipe.fit on
         """
-        self.alg_type = alg_type
         self.algorithm = algorithm
         self.encoder = encoder
 
@@ -116,26 +136,71 @@ class EncodePipeline:
                 ])
 
         pipe = Pipeline(steps=[('preprocessor', preprocessor),
-                            (alg_type, algorithm)])
+                            (self.alg_type, algorithm)])
         self.pipeline = pipe
         return pipe
 
-    def evaluate_pipeline(self):
+    def evaluate_encoders(self, test=False):
         """
         Evaluate a specific pipeline on the dataframe, df - we have a link to it because of the constructor
         """
-        X_train, X_test, y_train, y_test = train_test(self.df, self.target_name)
+        results = {}
         print("*******************************************************************")
-        print(self.encoder)
-        print("Training....")
-        model = self.pipeline.fit(X_train, y_train)
-
-        print("Predicting....")
-        y_pred = model.predict(X_test)
+        print("Benchmarking Encoders...")
         print("*******************************************************************")
+        print("Preparing Data...")
+        #don't want to deal with the empty data nonsense
+        df = self.df.fillna(-1)
+        X_train, X_test, y_train, y_test = train_test(df, self.target_name)
+        print("*******************************************************************")
+        print("Building Simple Algorithm...")
+        alg = self.get_basic_supervised_algorithm(testing=test)
+        print("Evaluating Encoders...")
+        encoders = get_encoders()
+        for encoder in encoders:
+            print("*******************************************************************")
+            print(encoder)
+            pipeline = self.create_basic_encode_pipeline(encoder, alg)
+            print("Training....")
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                model = pipeline.fit(X_train, y_train)
+            print("Predicting....")
+            y_pred = model.predict(X_test)
+            accuracy_stats = ll.AccuracyStats('classifier')
+            stats = accuracy_stats.calculate_stats(y_test, y_pred) #returns hashmap of stats
+            print(stats)
+            results[str(encoder)] = stats
+        return self.results_to_df(results)  #convert the dict of objects into a dataframe...
+    def results_to_df(self, results):
+        #convert the results into a dataframe, easier for users than a hash of objects!
+        keys = list(results.keys())
+        resultdf_cols = results[keys[0]].keys()
+        #print(resultdf_cols)
+        resultsdf = pd.DataFrame(columns=resultdf_cols)
+        for key in results.keys():
+            values_to_add = results[key]
+            row_to_add = pd.Series(values_to_add, name=key)
+            resultsdf = resultsdf.append(row_to_add)
+        return resultsdf
+        
         
 
+#TODO: Test me!
+#TODO: go find all those other functions that select rare values based on the distribution...
+def fix_uncommon_keys(df, field, threshold=1, replaceValue="-1"):
+    """
+    sometimes we get values in a column that are really really rare, and those keys hurt rather than help machine learning algorithms.  This replaces those keys with unknown (-1)
+    """
+    hm = df[field].value_counts().to_dict()
+    allowed_vals = []
+    for k, v in hm.items():
+        if v > threshold:
+            allowed_vals.append(k)
 
+    f = ~(df[field].isin(allowed_vals))
+    df.loc[f, field] = replaceValue
+    return df 
 
 
 def evaluate(df, target_name, encoders, algorithm, alg_type, max_samples=500): #note max_samples is really small!
