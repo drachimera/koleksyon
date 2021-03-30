@@ -64,7 +64,15 @@ def variables_by_type(df, target_name):
     return categorical_features, numeric_features
 
 #TODO: make this routine more general
-def train_test(df, target_name, max_samples=-1, etest_size=0.2):
+def train_test(df, target_name, max_samples=-1, etest_size=0.2, testing=False):
+    """
+    Easy macro for building train-test split
+    df - pandas dataframe
+    target_name - the column name of the variable we are trying to predict
+    max_samples - if -1, we take all rows, otherwise we take n rows where n is the number provided
+    etest_size - default test size is 20%, pass something else if you want a different distribution
+    testing - is this being run in a unit test?  we will need to set the seed so it behaves the same each time
+    """
     # Build training/testing
     print("Building Train/Test dataset")
     if max_samples == -1:
@@ -74,8 +82,12 @@ def train_test(df, target_name, max_samples=-1, etest_size=0.2):
     le = preprocessing.LabelEncoder()
     label_encoder = le.fit(y)
     y = label_encoder.transform(y)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=etest_size)
-    return X_train, X_test, y_train, y_test
+    if testing:
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=etest_size)
+        return X_train, X_test, y_train, y_test
+    else:
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=etest_size)
+        return X_train, X_test, y_train, y_test
 
 
 class EncodePipeline:
@@ -89,17 +101,19 @@ class EncodePipeline:
         self.target_name = target_name
         self.alg_type = alg_type
         self.categorical_features, self.numeric_features = variables_by_type(df, target_name)
+        self.testing=False
     def get_basic_supervised_algorithm(self, testing=False):
         """
         In benchmarking various encoding stratigies we need a basic algorithm that trains fast and runs fast.  This just returns random forest for the problem type.
         testing = True - set the random seed for testing uses, False, don't set the random seed
         """
-        if self.alg_type is "regressor":
+        self.testing = testing
+        if self.alg_type == "regressor":
             if testing == True:
                 alg = RandomForestRegressor(n_estimators=500, random_state = 42)
             else:
                 alg = RandomForestRegressor(n_estimators=1000)
-        if self.alg_type is "classifier":
+        if self.alg_type == "classifier":
             if testing == True:
                 alg = RandomForestClassifier(n_estimators=500, random_state = 42)
             else:
@@ -120,6 +134,12 @@ class EncodePipeline:
         """
         self.algorithm = algorithm
         self.encoder = encoder
+        iencoder = encoder()
+        try:
+            if self.testing == True:
+                iencoder = encoder(random_state=42)
+        except:
+            iencoder = encoder()  #some don't have the API we need...
 
         numeric_transformer = Pipeline(steps=[
             ('imputer', SimpleImputer(strategy='median')),
@@ -127,7 +147,7 @@ class EncodePipeline:
 
         categorical_transformer = Pipeline(steps=[
             ('imputer', SimpleImputer(strategy='constant', fill_value='missing')),
-            ('woe', encoder())])
+            ('woe', iencoder)])
 
         preprocessor = ColumnTransformer(
             transformers=[
@@ -144,6 +164,7 @@ class EncodePipeline:
         """
         Evaluate a specific pipeline on the dataframe, df - we have a link to it because of the constructor
         """
+        self.testing = test
         results = {}
         print("*******************************************************************")
         print("Benchmarking Encoders...")
@@ -151,7 +172,7 @@ class EncodePipeline:
         print("Preparing Data...")
         #don't want to deal with the empty data nonsense
         df = self.df.fillna(-1)
-        X_train, X_test, y_train, y_test = train_test(df, self.target_name)
+        X_train, X_test, y_train, y_test = train_test(df, self.target_name, testing=self.testing)
         print("*******************************************************************")
         print("Building Simple Algorithm...")
         alg = self.get_basic_supervised_algorithm(testing=test)
@@ -219,7 +240,7 @@ def evaluate(df, target_name, encoders, algorithm, alg_type, max_samples=500): #
     #don't want to deal with the empty data nonsense
     df = df.fillna(-1)
 
-    X_train, X_test, y_train, y_test = train_test(df, target_name, max_samples)
+    X_train, X_test, y_train, y_test = train_test(df, target_name, max_samples, testing=self.testing)
 
     for encoder in encoders:
         print("Setting Up Pipeline for Encoder:")

@@ -5,6 +5,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import RandomForestRegressor
 import category_encoders as ce
 import koleksyon.encode as ee
+import numpy as np
+
+np.random.seed(42)
 
 column_names_imports85 = ['age', 'workclass', 'fnlwgt', 'education', 'educational-num','marital-status',
                         'occupation', 'relationship', 'race', 'gender','capital-gain', 'capital-loss',

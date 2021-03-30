@@ -11,11 +11,13 @@ import koleksyon.lib as ll
 class SimulationArray:
     """
     The SimulationArray is a blazing fast data structure for rolling monte carlo dice based on data from the past.
+    The SimulationArray assumes a NxM array data structure where N is the number of unique rows, and M is the number of unique columns
     rows - commonly a set of 'locations' where events happen, or unique 'buckets'
     columns - commonly a set of blocks, dates or something similar that happen on a re-occuring basis
     """
     def __init__(self, df, rowKey, columnKey, amountKey, n_sims, setup=True):
         """
+        df - a pandas dataframe
         rowKey = (str) name of the column in df to define the rows for the simulation, most often something like departments, specialties, locations or buckets
         columnKey = (str) name of the column in df to define the columns for the simulation, most often dates, blocks or some other re-occuring thing such that the event happens in the bucket again
         ammountKey = name of the column that has the amount we are trying to simulate (str)
@@ -198,47 +200,6 @@ def power_analysis(n_sims, df_agg_gl, rolled_list, lvl ):
             output = output.append(new_row, ignore_index=True)
     return output
     #output.to_csv(lvl+'_100sims'+'_output_parellel.csv')
-
-#def prep_data():
-#    print("Loading Data:")
-#    ffile = "/data/finance_dda_models_bucket_v1.0.x_R&D_2019_POWER_DETAIL_DEPARTMENT.csv"
-#
-#    dfr_19 = pd.read_csv(ffile, nrows=100000)
-#
-#    print("Preprocessing Data:")
-#    dfna = dfr_19.fillna('NA')
-#
-#    print(dfna)
-#
-#    df = dfna[['GL2_GL3','DEPARTMENT_NAME','SERVICE_DATE','PAT_ENC_CSN_ID_CHARGE','TOT_CHARGE_TX_AMOUNT']].rename(columns={'GL2_GL3':'GL','PAT_ENC_CSN_ID_CHARGE':'ENC','TOT_CHARGE_TX_AMOUNT': 'Charge'})
-#    df['level']=df['GL']+'-'+df['DEPARTMENT_NAME']
-#    level_list=df.level.unique()
-#    df_agg=df.groupby(['SERVICE_DATE','level']).agg({'ENC':'count', 'Charge': 'sum'}).reset_index().rename(columns={'ENC':'ENC_COUNT','Charge': 'Total_charge'})
-#
-#    #print(df_agg)
-#    return level_list, df, df_agg
-
-
-#def simulate(level_list, df, df_agg, n_sims=10):
-#    for lvl in level_list:
-#        print('level',lvl)
-#        output = pd.DataFrame()
-#        #TODO: this is a table scan in a loop!
-#        df_agg_gl =df_agg[df_agg['level']==lvl]
-#        df_gl=df[df['level']==lvl]
-#        rolled_list = df_gl["Charge"].tolist()
-#        result = power_analysis(n_sims, df_agg_gl, rolled_list, lvl)
-#        print(result)
-#    #output.to_csv('100sims_output.csv')
-
-
-#def main(n_sims):
-#    level_list, df, df_agg = prep_data()
-#    #simulate(level_list, df, df_agg, n_sims)
-#    df = df.drop('GL', 1)
-#    df = df.drop('DEPARTMENT_NAME', 1)
-#    df = df.drop('ENC', 1)  
-#    SimulationArray(df, 'level', 'SERVICE_DATE', 'Charge', n_sims)
 
 #if __name__ == '__main__':
 #    main(int(sys.argv[1]))

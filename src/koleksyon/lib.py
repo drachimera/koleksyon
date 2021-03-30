@@ -7,6 +7,7 @@ import tempfile
 #math
 import math
 import statistics
+import collections
 from scipy.stats import kurtosis, skew
 from scipy.stats import uniform
 from scipy.stats import norm
@@ -60,6 +61,19 @@ def findMiddle(input_list):
         l.append(input_list[int(middle-1)])
         return l
 
+#originally in the statistics lib...
+def _counts(data):
+    # Generate a table of sorted (value, frequency) pairs.
+    table = collections.Counter(iter(data)).most_common()
+    if not table:
+        return table
+    # Extract the values with the highest frequency.
+    maxfreq = table[0][1]
+    for i in range(1, len(table)):
+        if table[i][1] != maxfreq:
+            table = table[:i]
+            break
+    return table
 
 #usage:
 # a = [1,1,2,2,3]
@@ -71,7 +85,7 @@ def find_mode_mode(list1):
     This will force the function to return a single mode if there are ties, and that single mode will be as
     close to the middle of the list as possible.  If the number is odd, it will be the middle, if even, we will pick the max of the two in the middle
     """
-    list_table = statistics._counts(list1) #occurance/count pairs that tie for mode e.g. [(1, 2), (2, 2)]
+    list_table = _counts(list1) #occurance/count pairs that tie for mode e.g. [(1, 2), (2, 2)]
     len_table = len(list_table)
 
     if len_table == 1:  #one value is the most common in the list, use that!
