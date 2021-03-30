@@ -5,7 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Import Data
-df_raw = pd.read_csv("./vizdata/mpg_ggplot2.csv")
+df_raw = pd.read_csv("../../../data/vizdata/mpg_ggplot2.csv")
 
 # Prepare Data
 df = df_raw.groupby('class').size().reset_index(name='counts')

@@ -33,7 +33,7 @@ print(sns.__version__)  #> 0.9.0
 
 
 # Import Data
-df = pd.read_csv('./vizdata/nightvisitors.csv')
+df = pd.read_csv('../../../data/vizdata/nightvisitors.csv')
 
 # Decide Colors 
 mycolors = ['tab:red', 'tab:blue', 'tab:green', 'tab:orange', 'tab:brown', 'tab:grey', 'tab:pink', 'tab:olive']      

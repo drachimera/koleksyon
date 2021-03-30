@@ -33,7 +33,7 @@ print(sns.__version__)  #> 0.9.0
 
 
 # Prepare Data
-df = pd.read_csv("./vizdata//mtcars.csv")
+df = pd.read_csv("../../../data/vizdata//mtcars.csv")
 x = df.loc[:, ['mpg']]
 df['mpg_z'] = (x - x.mean())/x.std()
 df['colors'] = 'black'

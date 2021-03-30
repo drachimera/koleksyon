@@ -27,7 +27,7 @@ sns.set_style("white")
 # %matplotlib inline
 
 # Import dataset 
-midwest = pd.read_csv("./vizdata/midwest_filter.csv")
+midwest = pd.read_csv("../../../data/vizdata/midwest_filter.csv")
 
 # Prepare Data 
 # Create as many colors as there are unique midwest['category']

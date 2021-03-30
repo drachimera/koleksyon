@@ -25,7 +25,7 @@ plt.style.use('seaborn-whitegrid')
 sns.set_style("white")
 
 # Read data
-df = pd.read_csv("./vizdata/email_campaign_funnel.csv")
+df = pd.read_csv("../../../data/vizdata/email_campaign_funnel.csv")
 
 # Draw Plot
 plt.figure(figsize=(13,10), dpi= 80)

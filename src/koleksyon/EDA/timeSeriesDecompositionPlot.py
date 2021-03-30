@@ -27,7 +27,7 @@ sns.set_style("white")
 # %matplotlib inline
 
 # Import Data
-df = pd.read_csv('./vizdata/AirPassengers.csv')
+df = pd.read_csv('../../../data/vizdata/AirPassengers.csv')
 print(df)
 
 from statsmodels.tsa.seasonal import seasonal_decompose

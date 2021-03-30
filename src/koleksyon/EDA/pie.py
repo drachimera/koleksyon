@@ -35,7 +35,7 @@ sns.set_style("white")
 from pywaffle import Waffle
 
 # Import
-df_raw = pd.read_csv("./vizdata/mpg_ggplot2.csv")
+df_raw = pd.read_csv("../../../data/vizdata/mpg_ggplot2.csv")
 
 # Prepare Data
 df = df_raw.groupby('class').size().reset_index(name='counts')

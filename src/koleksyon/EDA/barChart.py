@@ -21,7 +21,7 @@ plt.style.use('seaborn-whitegrid')
 sns.set_style("white")
 
 # Import Data
-df_raw = pd.read_csv("./vizdata//mpg_ggplot2.csv")
+df_raw = pd.read_csv("../../../data/vizdata//mpg_ggplot2.csv")
 
 # Prepare Data
 df = df_raw.groupby('manufacturer').size().reset_index(name='counts')

@@ -28,7 +28,7 @@ sns.set_style("white")
 # %matplotlib inline
 
 # Import Data
-df = pd.read_csv("./vizdata/mpg_ggplot2.csv")
+df = pd.read_csv("../../../data/vizdata/mpg_ggplot2.csv")
 
 # Draw Plot
 plt.figure(figsize=(13,10), dpi= 80)

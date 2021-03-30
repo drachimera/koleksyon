@@ -39,7 +39,7 @@ sns.set_style("white")
 
 
 # Import Data
-df = pd.read_csv("./vizdata/mpg_ggplot2.csv")
+df = pd.read_csv("../../../data/vizdata/mpg_ggplot2.csv")
 
 # !pip install joypy
 import joypy

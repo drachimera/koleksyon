@@ -32,7 +32,7 @@ print(mpl.__version__)  #> 3.0.0
 print(sns.__version__)  #> 0.9.0
 
 # Prepare Data
-df = pd.read_csv("./vizdata/economics.csv", parse_dates=['date']).head(100)
+df = pd.read_csv("../../../data/vizdata/economics.csv", parse_dates=['date']).head(100)
 
 x = list(df['date'])
 print(x)

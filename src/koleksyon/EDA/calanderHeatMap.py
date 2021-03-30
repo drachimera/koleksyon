@@ -34,7 +34,7 @@ print(sns.__version__)  #> 0.9.0
 import calmap
 
 # Import Data
-df = pd.read_csv("./vizdata/yahoo.csv", parse_dates=['date'])
+df = pd.read_csv("../../../data/vizdata/yahoo.csv", parse_dates=['date'])
 df.set_index('date', inplace=True)
 
 # Plot

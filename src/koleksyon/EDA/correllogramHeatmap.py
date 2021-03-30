@@ -32,7 +32,7 @@ print(sns.__version__)  #> 0.9.0
 
 
 # Import Dataset
-df = pd.read_csv("./vizdata/mtcars.csv")
+df = pd.read_csv("../../../data/vizdata/mtcars.csv")
 
 # Plot
 plt.figure(figsize=(12,10), dpi= 80)

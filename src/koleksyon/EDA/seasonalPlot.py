@@ -28,7 +28,7 @@ sns.set_style("white")
 # %matplotlib inline
 
 # Import Data
-df = pd.read_csv('./vizdata/AirPassengers.csv')
+df = pd.read_csv('../../../data/vizdata/AirPassengers.csv')
 print(df)
 
 # Prepare data

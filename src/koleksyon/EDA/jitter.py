@@ -28,7 +28,7 @@ sns.set_style("white")
 # %matplotlib inline
 
 # Import Data
-df = pd.read_csv("./vizdata/mpg_ggplot2.csv")
+df = pd.read_csv("../../../data/vizdata/mpg_ggplot2.csv")
 
 # Draw Stripplot
 fig, ax = plt.subplots(figsize=(16,10), dpi= 80)    

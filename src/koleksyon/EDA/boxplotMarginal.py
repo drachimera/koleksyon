@@ -30,7 +30,7 @@ print(mpl.__version__)  #> 3.0.0
 print(sns.__version__)  #> 0.9.0
 
 # Import Data
-df = pd.read_csv("./vizdata/mpg_ggplot2.csv")
+df = pd.read_csv("../../../data/vizdata/mpg_ggplot2.csv")
 
 # Create Fig and gridspec
 fig = plt.figure(figsize=(16, 10), dpi= 80)

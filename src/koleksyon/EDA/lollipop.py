@@ -32,7 +32,7 @@ print(sns.__version__)  #> 0.9.0
 
 
 # Prepare Data
-df_raw = pd.read_csv("./vizdata/mpg_ggplot2.csv")
+df_raw = pd.read_csv("../../../data/vizdata/mpg_ggplot2.csv")
 df = df_raw[['cty', 'manufacturer']].groupby('manufacturer').apply(lambda x: x.mean())
 df.sort_values('cty', inplace=True)
 df.reset_index(inplace=True)

@@ -29,7 +29,7 @@ sns.set_style("white")
 import statsmodels.tsa.stattools as stattools
 
 # Import Data
-df = pd.read_csv('./vizdata/mortality.csv')
+df = pd.read_csv('../../../data/vizdata/mortality.csv')
 x = df['mdeaths']
 y = df['fdeaths']
 

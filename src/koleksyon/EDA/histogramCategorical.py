@@ -29,7 +29,7 @@ sns.set_style("white")
 # %matplotlib inline
 
 # Import Data
-df = pd.read_csv("./vizdata/mpg_ggplot2.csv")
+df = pd.read_csv("../../../data/vizdata/mpg_ggplot2.csv")
 
 # Prepare data
 x_var = 'manufacturer'

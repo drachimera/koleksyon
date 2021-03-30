@@ -40,7 +40,7 @@ from dateutil.parser import parse
 from scipy.stats import sem
 
 # Import Data
-df_raw = pd.read_csv('./vizdata/orders_45d.csv', 
+df_raw = pd.read_csv('../../../data/vizdata/orders_45d.csv', 
                      parse_dates=['purchase_time', 'purchase_date'])
 
 # Prepare Data: Daily Mean and SE Bands

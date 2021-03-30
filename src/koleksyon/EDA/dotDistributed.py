@@ -29,7 +29,7 @@ sns.set_style("white")
 # %matplotlib inline
 
 # Import Data
-df_raw = pd.read_csv("./vizdata/mpg_ggplot2.csv")
+df_raw = pd.read_csv("../../../data/vizdata/mpg_ggplot2.csv")
 
 import matplotlib.patches as mpatches
 

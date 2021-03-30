@@ -28,7 +28,7 @@ sns.set_style("white")
 
 
 # Import Dataset
-df = pd.read_csv("./vizdata/mortality.csv")
+df = pd.read_csv("../../../data/vizdata/mortality.csv")
 
 # Define the upper limit, lower limit, interval of Y axis and colors
 y_LL = 100

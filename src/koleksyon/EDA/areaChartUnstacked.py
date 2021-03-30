@@ -34,7 +34,7 @@ print(mpl.__version__)  #> 3.0.0
 print(sns.__version__)  #> 0.9.0
 
 # Import Data
-df = pd.read_csv("./vizdata/economics.csv")
+df = pd.read_csv("../../../data/vizdata/economics.csv")
 
 # Prepare Data
 x = df['date'].values.tolist()
