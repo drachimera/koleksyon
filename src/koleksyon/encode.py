@@ -16,6 +16,8 @@ from sklearn.metrics import r2_score
 import category_encoders as ce
 import koleksyon.lib as ll
 
+# IMPORTANT NOTE: A previous version of this code considered 'testing' and tried to set the seed.
+
 #another useful site:
 #https://www.kaggle.com/subinium/11-categorical-encoders-and-benchmark
 
@@ -64,7 +66,7 @@ def variables_by_type(df, target_name):
     return categorical_features, numeric_features
 
 #TODO: make this routine more general
-def train_test(df, target_name, max_samples=-1, etest_size=0.2, testing=False):
+def train_test(df, target_name, max_samples=-1, etest_size=0.2):
     """
     Easy macro for building train-test split
     df - pandas dataframe
@@ -82,12 +84,8 @@ def train_test(df, target_name, max_samples=-1, etest_size=0.2, testing=False):
     le = preprocessing.LabelEncoder()
     label_encoder = le.fit(y)
     y = label_encoder.transform(y)
-    if testing:
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=etest_size)
-        return X_train, X_test, y_train, y_test
-    else:
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=etest_size)
-        return X_train, X_test, y_train, y_test
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=etest_size)
+    return X_train, X_test, y_train, y_test
 
 
 class EncodePipeline:
@@ -101,23 +99,14 @@ class EncodePipeline:
         self.target_name = target_name
         self.alg_type = alg_type
         self.categorical_features, self.numeric_features = variables_by_type(df, target_name)
-        self.testing=False
-    def get_basic_supervised_algorithm(self, testing=False):
+    def get_basic_supervised_algorithm(self):
         """
         In benchmarking various encoding stratigies we need a basic algorithm that trains fast and runs fast.  This just returns random forest for the problem type.
-        testing = True - set the random seed for testing uses, False, don't set the random seed
         """
-        self.testing = testing
         if self.alg_type == "regressor":
-            if testing == True:
-                alg = RandomForestRegressor(n_estimators=500, random_state = 42)
-            else:
-                alg = RandomForestRegressor(n_estimators=1000)
+            alg = RandomForestRegressor(n_estimators=1000)
         if self.alg_type == "classifier":
-            if testing == True:
-                alg = RandomForestClassifier(n_estimators=500, random_state = 42)
-            else:
-                alg = RandomForestClassifier(n_estimators=1000)
+            alg = RandomForestClassifier(n_estimators=1000)
         return alg
     def create_basic_encode_pipeline(self, encoder, algorithm):
         """
@@ -135,11 +124,6 @@ class EncodePipeline:
         self.algorithm = algorithm
         self.encoder = encoder
         iencoder = encoder()
-        try:
-            if self.testing == True:
-                iencoder = encoder(random_state=42)
-        except:
-            iencoder = encoder()  #some don't have the API we need...
 
         numeric_transformer = Pipeline(steps=[
             ('imputer', SimpleImputer(strategy='median')),
@@ -160,11 +144,10 @@ class EncodePipeline:
         self.pipeline = pipe
         return pipe
 
-    def evaluate_encoders(self, test=False):
+    def evaluate_encoders(self):
         """
         Evaluate a specific pipeline on the dataframe, df - we have a link to it because of the constructor
         """
-        self.testing = test
         results = {}
         print("*******************************************************************")
         print("Benchmarking Encoders...")
@@ -172,26 +155,30 @@ class EncodePipeline:
         print("Preparing Data...")
         #don't want to deal with the empty data nonsense
         df = self.df.fillna(-1)
-        X_train, X_test, y_train, y_test = train_test(df, self.target_name, testing=self.testing)
+        X_train, X_test, y_train, y_test = train_test(df, self.target_name)
         print("*******************************************************************")
         print("Building Simple Algorithm...")
-        alg = self.get_basic_supervised_algorithm(testing=test)
+        alg = self.get_basic_supervised_algorithm()
         print("Evaluating Encoders...")
         encoders = get_encoders()
         for encoder in encoders:
             print("*******************************************************************")
             print(encoder)
             pipeline = self.create_basic_encode_pipeline(encoder, alg)
-            print("Training....")
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore")
-                model = pipeline.fit(X_train, y_train)
-            print("Predicting....")
-            y_pred = model.predict(X_test)
-            accuracy_stats = ll.AccuracyStats('classifier')
-            stats = accuracy_stats.calculate_stats(y_test, y_pred) #returns hashmap of stats
-            print(stats)
-            results[str(encoder)] = stats
+            try:
+                print("Training....")
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    model = pipeline.fit(X_train, y_train)
+                print("Predicting....")
+                y_pred = model.predict(X_test)
+                accuracy_stats = ll.AccuracyStats(self.alg_type)
+                stats = accuracy_stats.calculate_stats(y_test, y_pred) #returns hashmap of stats
+                print(stats)
+                results[str(encoder)] = stats
+            except ValueError:
+                print("Encoder Does not work on this data, do not use: " + str(encoder))
+
         return self.results_to_df(results)  #convert the dict of objects into a dataframe...
     def results_to_df(self, results):
         #convert the results into a dataframe, easier for users than a hash of objects!

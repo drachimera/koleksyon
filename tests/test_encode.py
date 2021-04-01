@@ -59,6 +59,7 @@ class TestEncode(unittest.TestCase):
 
 
     def test_classification(self):
+ #   def foobar(self):
         print("Testing the encoder evaluation API on a classification problem")
         #Original Data location
         #url_data = 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data'
@@ -76,19 +77,27 @@ class TestEncode(unittest.TestCase):
         assert_frame_equal(expected, results)
 
 
-def regression_example():
-    print("Downloading Data....")
-#    url_data = 'https://archive.ics.uci.edu/ml/machine-learning-databases/autos/imports-85.data'
-    column_names = ['symboling', 'normalized-losses', 'make', 'fuel-type','aspiration',
+    def test_regression_example(self):
+        print("Testing Regression Example....")
+    #    url_data = 'https://archive.ics.uci.edu/ml/machine-learning-databases/autos/imports-85.data'
+        column_names = ['symboling', 'normalized-losses', 'make', 'fuel-type','aspiration',
                     'num-of-doors', 'body-style', 'drive-wheels', 'engine-location',
                     'wheel-base', 'length', 'width', 'height', 'curb-weight',
                     'engine-type', 'num-of-cylinders', 'engine-size', 'fuel-system',
                     'bore', 'stroke', 'compression-ratio', 'horsepower', 'peak-rpm',
                     'city-mpg', 'highway-mpg', 'price']
-#    car_data = pd.read_csv(url_data, names=column_names)
-#    print("Setting Up Machine Learning Algorithm...")
-#    algtype = "regressor"
-#    alg = RandomForestRegressor(n_estimators=500)
+        car_data = pd.read_csv("../data/imports85.csv")
+        print(car_data)
+        print("Setting Up Machine Learning Algorithm...")
+        ep = ee.EncodePipeline(car_data, 'price', 'regressor')
+        results = ep.evaluate_encoders()
+        print(results)
+        #results.to_csv("regressor_encoder_results.csv")
+        expected = pd.read_csv("regressor_encoder_results.csv", index_col=0)
+        print(expected)
+        assert_frame_equal(expected, results)
+        #TODO: test that results are consistent across runs!
+        #alg = RandomForestRegressor(n_estimators=500)
 #    print("Getting Encoders for Evaluation...")
 #    encoders = ee.get_encoders()
 #    #remove some encoders you don't want... e.g. woe encoders don't work on regression!
@@ -96,6 +105,7 @@ def regression_example():
 #    print(encoders)
 #    print("Evaluating the Various Encoders...")
 #    ee.evaluate(car_data, 'price', encoders, alg, algtype)
+
 
 
 #example usuage on public data:
