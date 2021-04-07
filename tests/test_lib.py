@@ -3,6 +3,7 @@
 # setup.py that excludes installing the "tests" package
 
 import unittest
+from pandas._testing import assert_frame_equal
 
 import pandas as pd
 import hashlib  #should just be needed in testing to see if the contents of a generated file are correct
@@ -82,7 +83,7 @@ class TestLib(unittest.TestCase):
             "Mean:	40594.737032063116",
             "Mode:	2000",
             "Variance:	60106.5809259237",
-            "Excess kurtosis of normal distribution (should be 0):	60106.5809259237",
+            "Excess kurtosis of normal distribution (should be 0):	268.81292471517384",
             "Skewness of normal distribution (should be 0):	11.770504957244958",
             ""
         ]
@@ -94,7 +95,7 @@ class TestLib(unittest.TestCase):
     def test_density_plot(self):
         print("Testing Density Plot...")
         # Correct original md5
-        original_md5 = '07e1b5ecbc2f03eb8a1e7dc3b586a751' 
+        original_md5 = '4bf2a12d829742b8dec606d8a823cfd3' 
 
         df = pd.read_csv("../data/cars.csv")
         x = df['MSRP']
@@ -102,6 +103,27 @@ class TestLib(unittest.TestCase):
         print(pltFile)
         #check that the rendering is the same as what we expect for this data/variable
         self.assertTrue(check_contents(original_md5, pltFile, ["<dc:date>", "style=", "path clip-path=", "clipPath id=", "xlink:href"]))
+
+    def test_calculate_summary_statistics_numeric(self):
+        print("Testing Calculating Summary Statistics for Numeric Features")
+        df = pd.read_csv("../data/cars.csv")
+        sstats = ll.calculate_summary_stats(df)
+        #print(sstats)
+        #sstats.to_csv("./testing_data/cars_numeric_stats.csv")
+        estats = pd.read_csv("./testing_data/cars_numeric_stats.csv", index_col=0) #expected result
+        #print(estats)
+        assert_frame_equal(sstats, estats)
+
+    def test_calculate_summary_statistics_groupby(self):
+        print("Testing Calculating Summary Statistics Groupby")
+        df = pd.read_csv("../data/cars.csv")
+        sstats = ll._calculate_summary_stats_groupby(df, "Make", "MSRP", fill=0)
+        print(sstats)
+        #sstats.to_csv("./testing_data/cars_groupby_stats.csv")
+        estats = pd.read_csv("./testing_data/cars_groupby_stats.csv", index_col=0) #expected result
+        print(estats)
+        assert_frame_equal(sstats, estats)
+
 
 #TODO: this function needs to be redone!  especially in light of the new encode library...            
 #    def test_data_prep(self):
@@ -116,10 +138,7 @@ class TestLib(unittest.TestCase):
 #        self.assertEqual(1778, len(X_test))
 #        self.assertEqual(1778, len(y_test))
 
-    #def test_var_analysis(self):
-    #    df = pd.read_csv("../data/cars.csv")
-    #    print(df)
-    #    ll.var_analysis(df, "MSRP")
+
 
     ######################################################################
     #

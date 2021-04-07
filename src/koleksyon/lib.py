@@ -36,6 +36,22 @@ import matplotlib.pyplot as plt
 from IPython.display import Image, SVG, display
 from IPython.display import set_matplotlib_formats
 
+
+#TODO: test this function!
+def variables_by_type(df, target_name="__undefined__"):
+    """
+    easy method to get back catigorical and numeric fields in the dataframe (I always forget the exact syntax) AND you always have to take out the target!
+    """
+    categorical_features = df.select_dtypes(include=['object']).columns
+    if target_name in categorical_features:
+        categorical_features = categorical_features.drop(target_name)
+    #print(categorical_features)
+    numeric_features = df.select_dtypes(include=['int64', 'float64']).columns
+    if target_name in numeric_features:
+        numeric_features = numeric_features.drop(target_name)
+    #print(numeric_features)
+    return categorical_features, numeric_features
+
 #  listOfImageNames = ['/path/to/images/1.png',
 #                      '/path/to/images/2.png']
 #
@@ -112,28 +128,133 @@ class dist_report():
     def __init__(self, df, vname):
         self.vname = str(vname)
         x = df[vname]
-        self.num = len(x)
-        self.mn = min(x)
-        self.mx = max(x)
-        self.ave = np.mean(x)
-        self.md = find_mode_mode(x)
-        self.sd = np.std(x)
-        self.kurt = kurtosis(x)
+        self.number = len(x)
+        self.min = min(x)
+        self.max = max(x)
+        self.mean = np.mean(x)
+        self.mode = find_mode_mode(x)
+        self.variance = np.std(x)
+        self.kurtosis = kurtosis(x)
         self.skew = skew(x)
     def __str__(self):
         srep = ""
         srep = srep + "Statistics for  Variable:\t" + str(self.vname) + "\n"
-        srep = srep + "Number of Data Points:\t" + str(self.num) + "\n"
-        srep = srep + "Min:\t" + str(self.mn) + "\n"
-        srep = srep + "Max:\t" + str(self.mx) + "\n"
-        srep = srep + "Mean:\t" + str(self.ave) + "\n"
-        srep = srep + "Mode:\t" + str(self.md) + "\n"
-        srep = srep + "Variance:\t" + str(self.sd) + "\n"
-        srep = srep + "Excess kurtosis of normal distribution (should be 0):\t" + str(self.sd) + "\n"
+        srep = srep + "Number of Data Points:\t" + str(self.number) + "\n"
+        srep = srep + "Min:\t" + str(self.min) + "\n"
+        srep = srep + "Max:\t" + str(self.max) + "\n"
+        srep = srep + "Mean:\t" + str(self.mean) + "\n"
+        srep = srep + "Mode:\t" + str(self.mode) + "\n"
+        srep = srep + "Variance:\t" + str(self.variance) + "\n"
+        srep = srep + "Excess kurtosis of normal distribution (should be 0):\t" + str(self.kurtosis) + "\n"
         srep = srep + "Skewness of normal distribution (should be 0):\t" + str(self.skew) + "\n"
         return srep
 
+def _stat_results_to_df(results):
+    """
+    results is a hash computed in some way that contains:
+    key - an index for the row (unique)
+    value - dist_report objects
+    @return - a dataframe of summary statistics for the results
+    """
+    keys = list(results.keys())
+    resultdf_cols = list(vars(results[keys[0]]).keys())  #columns in the output array, objects of type dist_report have these members
+    resultsdf = pd.DataFrame(columns=resultdf_cols)
+    for key in results.keys():
+        values_to_add = vars(results[key])
+        #print(values_to_add)
+        row_to_add = pd.Series(values_to_add, name=key)
+        resultsdf = resultsdf.append(row_to_add)
 
+    resultsdf[resultdf_cols] = resultsdf[resultdf_cols].apply(pd.to_numeric, errors='coerce')
+    resultsdf = resultsdf.drop(['vname'], axis=1)
+    resultsdf.reset_index(inplace=True)
+    resultsdf = resultsdf.rename(columns = {'index':'column name'})
+    #resultsdf.reset_index(drop=True, inplace=True)
+    #resultsdf = resultsdf.to_numeric(errors='coerce')
+    return resultsdf
+
+def _calculate_summary_stats_numeric_columns(df):
+    """
+    Utility function that calculates the summary statistics for all numeric_features and puts the results into a dataframe
+    df - the original dataframe
+    """
+    categorical_features, numeric_features = variables_by_type(df)
+    #first build a hash of columns
+    results = {}
+    for col in numeric_features:
+        #print(col)
+        results[col] = dist_report(df, col)
+    #second convert the hash into a dataframe
+    resultsdf = _stat_results_to_df(results)
+    return resultsdf
+
+def build_groupby_df(df, category, numeric, fill=-1):  
+    """
+    Copies a dataframe, df, and then groups the numeric data in column 'numeric' by a given category 'category'
+    df - pandas dataframe
+    numeric - the numeric column, e,g, price, los, time, ect.
+    category - the categorical column e.g. service desk, drg, surgeon
+    fill - the value we should use to fill NA, NaN ect
+    """# numeric variable, categorical variable
+    count_col = category + " count"
+    sum_col = category + " sum"
+    df_copy = df.copy()  
+    df_copy[category].fillna(str(fill), inplace=True)
+    df_copy[category] = df_copy[category].astype("object")
+    df_copy[numeric].fillna(fill, inplace=True)
+    df_copy[count_col] = df_copy.groupby(by=[category])[category].transform("count")
+    df_copy[sum_col] = df_copy.groupby(by=[category])[numeric].transform("sum")
+    df_copy[category + " groupby"] = df_copy[category].apply(str) + "_(" + df_copy[count_col].apply(str) + "|" + df_copy[sum_col].apply(str) + ")"
+    df_copy.sort_values(by=[count_col])
+    return df_copy
+
+def _calculate_summary_stats_groupby(df, category, numeric, fill=-1):
+    """
+    Utility function that calculates the summary statistics for all numeric_features and puts the results into a dataframe
+    df - dataframe built by running build_groupby_df
+    fill - the value we should use to fill NA, NaN ect
+    """
+    calculated_column = category + " groupby"  #calculated by build_groupby_df
+    groupdf = build_groupby_df(df, category, numeric, fill)
+    categories = list(groupdf[calculated_column].value_counts().index)
+    group = {} # A group to hold all of the instances of a given category
+    for cat in categories:
+        group[cat] = [] #empty list for now
+    #go through df, appending the value @numeric to group lists
+    for i in range(len(groupdf)):
+        rowdf = groupdf.iloc[i]
+        #print(rowdf[calculated_column])
+        #print(rowdf[numeric])
+        group[rowdf[calculated_column]].append(rowdf[numeric])
+    #calculate statistics
+    results = {}
+    for key in group:  #key is a calculated column value e.g. Biggin_(897|650891790.0) ... , value is the values in column 'numeric' for all instances of that key in the dataframe
+        ldf = pd.DataFrame (group[key], columns=[key]) #turn the list into a dataframe so we can compute stats
+        dr = dist_report(ldf, key)
+        results[key] = dr
+    return _stat_results_to_df(results)
+
+
+
+
+def calculate_summary_stats(df, category=-1, numeric=-1, fill=-1):
+    """
+    Returns a pandas dataframe of the key summary statistics for a column, vname, for a given dataframe, df.
+    summary statistics are defined in the dist_report
+    df - the dataframe
+    category - the variable we wish to use to segment the data (each segment results in multiple rows out)
+    numeric - the variable we are calculating statistics on, if not provided we will calculate for all
+    fill - the value we should use to fill NA, NaN ect
+    """
+    if category == -1: #they just want summary statistics for df
+        return _calculate_summary_stats_numeric_columns(df)
+    elif category == -1 and numeric == -1:
+        print("Error: must specify both category and numeric value to do a groupby...")
+        return None
+    else:
+        return _calculate_summary_stats_groupby(df, category, numeric)
+
+    
 
 def density_plot(x, nplot=500, save_file="/tmp/density_plt.svg"):
     """
@@ -212,11 +333,11 @@ def data_prep(df, target_variable, missing_strategy="impute", balance_strategy="
     test_size - the % of data you want in training vs testing... note, using 0 is a good hack for production... as it will do the same data prep operations
     """
     df2 = df
-    if missing_strategy is "droprow":
+    if missing_strategy == "droprow":
         df2 = df.dropna()
-    if missing_strategy is "dropcol":
+    if missing_strategy == "dropcol":
         df2 = df.dropna()
-    if missing_strategy is "fillna":
+    if missing_strategy == "fillna":
         df2 = df.fillna(-1)
     #do the multi-line scikit data prep
     
@@ -283,9 +404,9 @@ class AccuracyStats:
         """
         easy to remember convience method
         """
-        if self.model_type is 'regressor':
+        if self.model_type == 'regressor':
             return self.regression_stats(y_test, y_pred)
-        elif self.model_type is 'classifier':
+        elif self.model_type == 'classifier':
             return self.classification_stats(y_test, y_pred)
     def classification_stats(self, y_test, y_pred):
         """

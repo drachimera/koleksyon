@@ -51,20 +51,6 @@ def get_encoders():
                 ]
     return encoder_list
 
-def variables_by_type(df, target_name):
-    """
-    easy method to get back catigorical and numeric fields in the dataframe (I always forget the exact syntax) AND you always have to take out the target!
-    """
-    categorical_features = df.select_dtypes(include=['object']).columns
-    if target_name in categorical_features:
-        categorical_features = categorical_features.drop(target_name)
-    #print(categorical_features)
-    numeric_features = df.select_dtypes(include=['int64', 'float64']).columns
-    if target_name in numeric_features:
-        numeric_features = numeric_features.drop(target_name)
-    #print(numeric_features)
-    return categorical_features, numeric_features
-
 #TODO: make this routine more general
 def train_test(df, target_name, max_samples=-1, etest_size=0.2):
     """
@@ -98,7 +84,7 @@ class EncodePipeline:
         self.df = df
         self.target_name = target_name
         self.alg_type = alg_type
-        self.categorical_features, self.numeric_features = variables_by_type(df, target_name)
+        self.categorical_features, self.numeric_features = ll.variables_by_type(df, target_name)
     def get_basic_supervised_algorithm(self):
         """
         In benchmarking various encoding stratigies we need a basic algorithm that trains fast and runs fast.  This just returns random forest for the problem type.

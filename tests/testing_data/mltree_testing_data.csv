@@ -1,0 +1,11 @@
+result1,result2,id,encounter type,order,description,department,campus,region,gender,visit,provider,specialty,payer
+0,272,12345,Office Visit,RET165,WELL CHILD,Community Pediatric and Adolescent Medicine,MCHS WI Eau Claire Luther Campus Clinic,MCHS NW WI,Female,PED CAM WELL CHILD,John Doe,Pediatrics,UNKNOWN
+282,0,54321,Hospital Encounter,LAB689,,Laboratory Medicine,MCHS WI Clairemont Campus Clinic,MCHS NW WI,Male,LAB TEST URINE CONTAINER,Lab1,,MEDICARE
+68,100,43215,Office Visit,RET11,SKIN CHECK,Dermatology,Rochester,Rochester,Female,DER RTN,Jane Doe,Dermatology,MEDICARE
+156,234,32154,Office Visit,,OTHER,Community Internal Medicine,MCHS WI Eau Claire Luther Campus Clinic,MCHS NW WI,Female,CIM EST,Juliet Doe,Internal Medicine,MEDICARE
+230,343,21543,Office Visit,RET11,DERMATITIS,Dermatology,MCHS WI Eau Claire Luther Campus Clinic,MCHS NW WI,Male,DER RTN,Josh Doe,Dermatology,MEDICARE
+261,386,15432,Office Visit,,SKIN CHECK,Dermatology,MCHS WI Eau Claire Luther Campus Clinic,MCHS NW WI,Male,DER RTN,Josh Doe,Dermatology,MEDICARE
+282,0,23451,Hospital Encounter,LAB689,,Laboratory Medicine,MCHS WI Clairemont Campus Clinic,MCHS NW WI,Male,LAB TEST URINE CONTAINER,Lab1,,MEDICARE
+0,262,34512,Comprehensive Visit,,PAIN,Orthopedic Surgery,MCHS WI Eau Claire Luther Campus Clinic,MCHS NW WI,Female,ORS CONS SHOULDER,Dan Doe,Orthopedic Surgery,BLUE CROSS BLUE SHIELD
+1303,38,45123,Hospital Encounter,LAB132|LAB104556|LAB294|LAB90|LAB15|LAB67|LAB68|LAB162,,Laboratory Medicine,MCHS WI Clairemont Campus Clinic,MCHS NW WI,Male,LAB TEST BLOOD,Lab1,,MEDICARE
+68,100,51234,Office Visit,RET11,SKIN CHECK,Dermatology,MCHS WI Eau Claire Luther Campus Clinic,MCHS NW WI,Female,DER RTN,Jane Doe,Dermatology,MEDICARE

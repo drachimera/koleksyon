@@ -72,7 +72,7 @@ class TestEncode(unittest.TestCase):
         ep = ee.EncodePipeline(df, target_name, "classifier")
         results = ep.evaluate_encoders()
         print(results)
-        expected = pd.read_csv("./classifier_encoder_results.csv", index_col=0)
+        expected = pd.read_csv("testing_data/classifier_encoder_results.csv", index_col=0)
         print(expected)
         assert_frame_equal(expected, results)
 
@@ -93,7 +93,7 @@ class TestEncode(unittest.TestCase):
         results = ep.evaluate_encoders()
         print(results)
         #results.to_csv("regressor_encoder_results.csv")
-        expected = pd.read_csv("regressor_encoder_results.csv", index_col=0)
+        expected = pd.read_csv("testing_data/regressor_encoder_results.csv", index_col=0)
         print(expected)
         assert_frame_equal(expected, results)
         #TODO: test that results are consistent across runs!
