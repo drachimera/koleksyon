@@ -1,6 +1,9 @@
 #builds
 koleksyon*tar.gz
 
+#crazy data downloads for torch
+scratch/torch/aladdinPersson/data*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
