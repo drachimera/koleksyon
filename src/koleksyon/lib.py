@@ -32,6 +32,7 @@ import koleksyon.dta as dd
 
 #plot
 import seaborn as sns
+import matplotlib
 import matplotlib.pyplot as plt
 from IPython.display import Image, SVG, display
 from IPython.display import set_matplotlib_formats
@@ -504,3 +505,86 @@ def load_drop_columns(df, targets, file):
             drop.append(feature)
     return drop
 
+#TODO: Test me!
+def saveToPDF(pdfFile, figs):
+    '''
+    Description: saves all figures in figs to a PDF file named pdfFile
+    
+    @input: 
+        pdfFile: full path of PDF file including name
+        figs: list of figures to save
+    '''
+    import matplotlib.backends.backend_pdf
+    pdf = matplotlib.backends.backend_pdf.PdfPages(pdfFile)
+    for fig in figs: 
+        pdf.savefig( fig )
+    pdf.close()
+
+#TODO: Test me!
+def getGroupings(listVals, groupSize=20):
+    '''
+    Description: Get the groupings of size groupSize needed for boxplot from listVals
+    @input:
+        listVals: sorted list of values which will be used to create the groupings
+        groupSize: size of each group used in boxplot (i.e. 20 MS DRGs)
+    @return:
+        groupOfN: a dictionary with starting index of each group as key and all elements of the group as value
+                    i.e groupOfN.get(0) = ["470.0(1114|2009)", "871.0(632|4126)", ...]
+    '''
+    groupOfN={}
+    currList=[]
+    endIndex = 0
+    for ix, val in enumerate(listVals):
+        if (ix!=0) and (ix%groupSize==0):
+            groupOfN[ix-groupSize] = currList
+            endIndex = ix-1
+            currList=[]
+        currList.append(val)
+
+    groupOfN[endIndex+1] = currList
+    return groupOfN
+
+#TODO: Test me!
+def boxplotPrep(df, group, y, groupSize=20):
+    """
+    group - the name of the column that we want to group by (this will be on the x axis of the boxplot).  e.g. DRG, ADMISSION_DIAGNOSIS, DEPARTMENT, ect...
+    y - the value that will be on the y axis of the boxplot.  Usually a number! charges, LOS, bed count, ect...
+    """
+    #columns we will be adding to df
+    new_column_count = group + "_count"  
+    new_column_sum = group + "_sum" 
+    new_column_label = group + "_label"
+    df[new_column_count] = df.groupby(by=[group])[group].transform("count")
+    df[new_column_sum] = df.groupby(by=[group])[y].transform("sum")
+    df[new_column_label] = df[group].apply(str) + "(" + df[new_column_count].apply(str) + "|" + df[new_column_sum].apply(str) + ")"
+    df = df.sort_values(by=[new_column_count])
+    freq = df[new_column_label].value_counts()
+    groupings = getGroupings(freq.index, groupSize)
+    return df, freq, groupings
+#original usuage...
+#df, freq, groupings = boxplotPrep(df, "ADMISSION_DIAGNOSIS", "LOS")
+#df
+
+#TODO: Test me!
+def plotAGroup(df_main, byCol, valCol, filterList, title, figSize=(15,9)):
+    '''
+    Description: creates a boxplot for a group and returns reference to figure 
+    @input:
+        df_main: source dataframe to plot the data
+        byCol: column by which boxplots would be created (i.e. MS DRG)
+        valCol: column with distribution values (i.e. Length of Stay, Count of cases etc)
+        filterList: a list of values for which plot would be created. This is used to filter the main dataframe
+                    before plotting
+        title: title of the boxplot
+        figSize: dimensions of the figure
+    '''
+    params = {'axes.titlesize':'9'}
+    matplotlib.rcParams.update(params)
+    fig1, ax1 = plt.subplots(1,1,figsize=figSize)
+
+    df_temp = df_main[df_main[byCol].isin(filterList)]
+    axes=df_temp.boxplot(column=[valCol], by=[byCol], showmeans=True, ax=ax1, fontsize=8, return_type='axes')
+    _=ax1.set_xticklabels(ax1.get_xticklabels(), rotation=90)
+    _=ax1.set_title(f"{title}")
+    
+    return fig1
