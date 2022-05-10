@@ -8,6 +8,7 @@ import numpy as np
 
 x = torch.arange(9)  # tensor([0, 1, 2, 3, 4, 5, 6, 7, 8])
 print(x)
+print(x.view(-1))    # tensor([0, 1, 2, 3, 4, 5, 6, 7, 8])
 print(x.view([3,3])) # tensor([[0, 1, 2],
                      #         [3, 4, 5],
                      #         [6, 7, 8]])
